@@ -1,376 +1,223 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { 
-  Mail, Linkedin, Menu, X, PlayCircle, Instagram, Facebook, 
-  Sun, Moon, Layers, Globe, ChevronDown, Video, ExternalLink, Play
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hesham Cinematic</title>
 
-// --- VIDEO DATABASE ---
-const VIDEO_LINKS = [
-  "https://player.vimeo.com/video/1081231929",
-  "https://player.vimeo.com/video/1093436208",
-  "https://player.vimeo.com/video/1012761186",
-  "https://player.vimeo.com/video/782962222",
-  "https://player.vimeo.com/video/1081226158",
-  "https://player.vimeo.com/video/348818970",
-  "https://player.vimeo.com/video/1137725566",
-  "https://player.vimeo.com/video/1088303838",
-  "https://player.vimeo.com/video/697540206",
-  "https://player.vimeo.com/video/348850766",
-  "https://player.vimeo.com/video/1127837184",
-  "https://player.vimeo.com/video/348850143",
-  "https://www.youtube.com/embed/n4gmpMHBUK4",
-  "https://player.vimeo.com/video/1141818722",
-  "https://www.youtube.com/embed/DqZM6chIz8c",
-  "https://player.vimeo.com/video/815712178",
-  "https://www.youtube.com/embed/6J3qrLEB6Uw",
-  "https://www.youtube.com/embed/Lb1WNNI-mJU",
-  "https://www.youtube.com/embed/k-BVul-oCNQ",
-  "https://www.youtube.com/embed/B0KC9WzoYfw",
-  "https://www.youtube.com/embed/8o3vHHhsed4",
-  "https://player.vimeo.com/video/1127838352",
-  "https://www.youtube.com/embed/sYUCtAFHbfc",
-  "https://www.youtube.com/embed/sz8RTnunR-U",
-  "https://player.vimeo.com/video/919167340",
-  "https://www.youtube.com/embed/bTyCS3wRybM",
-  "https://www.youtube.com/embed/34fza20tlhA",
-  "https://www.youtube.com/embed/cc5rdSxI6ws"
-];
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;900&display=swap" rel="stylesheet">
 
-const TIMELINE_EVENTS = [
-  { id: 1, year: "2014 - 2018", role_en: "Multimedia Producer", role_ar: "منتج مالتي ميديا", company: "Gamma Rapho Agency", details_en: "Produced content documenting conflict and social transformation in Syria, Sudan, and Libya.", details_ar: "إنتاج محتوى يوثق الصراعات والتحولات الاجتماعية في سوريا والسودان وليبيا.", track: 3, color: "#10b981", start: 0, end: 30 },
-  { id: 2, year: "2018 - 2022", role_en: "Multimedia Producer", role_ar: "منتج ميديا", company: "Media Vision (Al Ghad TV)", details_en: "Produced 40+ documentary films across 5 Arab countries.", details_ar: "إنتاج أكثر من 40 فيلماً وثائقياً في 5 دول عربية.", track: 2, color: "#3b82f6", start: 25, end: 60 },
-  { id: 3, year: "2022 - 2023", role_en: "Multimedia Manager", role_ar: "مدير مالتي ميديا", company: "Baheya Foundation", details_en: "Led filming department for Egypt's leading breast cancer charity.", details_ar: "قيادة قسم التصوير في أكبر مؤسسة خيرية لعلاج سرطان الثدي في مصر.", track: 1, color: "#ec4899", start: 55, end: 75 },
-  { id: 4, year: "2024 - Present", role_en: "Multimedia Producer", role_ar: "منتج ميديا", company: "FLOW Medical Solutions", details_en: "Leading video production for medical brand stories in Riyadh.", details_ar: "قيادة إنتاج الفيديو لقصص العلامات التجارية الطبية في الرياض.", track: 0, color: "#60a5fa", start: 70, end: 100 }
-];
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-// --- HELPERS ---
-const getThumbnail = (url) => {
-  if (url.includes('vimeo')) {
-    const id = url.split('/').pop();
-    return `https://vumbnail.com/${id}.jpg`;
-  }
-  if (url.includes('youtube') || url.includes('youtu.be') || url.includes('embed')) {
-    const parts = url.split('/');
-    const id = parts[parts.length - 1].split('?')[0];
-    return `https://img.youtube.com/vi/${id}/0.jpg`;
-  }
-  return "https://images.unsplash.com/photo-1536240478700-b86d35fd733c?auto=format&fit=crop&q=80&w=800";
-};
-
-// --- COMPONENTS ---
-
-const SectionDivider = () => (
-  <div className="w-full h-24 overflow-hidden relative opacity-10 pointer-events-none">
-    <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="absolute bottom-0 w-full h-full fill-current">
-      <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.43,147.3,126,211.52,108.53,275.74,91.1,321.39,56.44,321.39,56.44Z"></path>
-    </svg>
-  </div>
-);
-
-const CountUp = ({ value, suffix }) => {
-  const [count, setCount] = useState(0);
-  const nodeRef = useRef(null);
-  const [hasStarted, setHasStarted] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) setHasStarted(true);
-    }, { threshold: 0.5 });
-    if (nodeRef.current) observer.observe(nodeRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!hasStarted) return;
-    let start = 0;
-    const end = parseInt(value);
-    const duration = 2000;
-    let startTime = null;
-    const animate = (currentTime) => {
-      if (!startTime) startTime = currentTime;
-      const progress = Math.min((currentTime - startTime) / duration, 1);
-      setCount(Math.floor(progress * end));
-      if (progress < 1) requestAnimationFrame(animate);
-    };
-    requestAnimationFrame(animate);
-  }, [hasStarted, value]);
-
-  return <span ref={nodeRef}>{count}{suffix}</span>;
-};
-
-// --- THE EDIT SUITE (Original Interactive Timeline) ---
-const VideoEditorTimeline = ({ lang }) => {
-  const [hoverX, setHoverX] = useState(50);
-  const [activeEvent, setActiveEvent] = useState(TIMELINE_EVENTS[3]);
-  const containerRef = useRef(null);
-
-  const handleMouseMove = (e) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    setHoverX(x);
-    const found = TIMELINE_EVENTS.find(ev => x >= ev.start && x <= ev.end);
-    if (found) setActiveEvent(found);
-  };
-
-  return (
-    <div className={`w-full py-20 px-6 ${lang === 'AR' ? 'rtl' : 'ltr'}`}>
-      <div className="max-w-6xl mx-auto">
-        <div className={`flex items-center gap-4 mb-12 ${lang === 'AR' ? 'flex-row-reverse' : ''}`}>
-          <div className="p-3 bg-[#d8b97a] rounded-xl text-black shadow-lg"><Layers size={24} /></div>
-          <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter italic">
-            {lang === 'AR' ? 'غرفة المونتاج' : 'The Edit Suite'}
-          </h2>
-        </div>
-        <div className="grid md:grid-cols-2 gap-12 mb-16 items-center">
-            <AnimatePresence mode="wait">
-              <motion.div key={activeEvent.id} initial={{ opacity: 0, x: lang === 'AR' ? 20 : -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: lang === 'AR' ? -20 : 20 }} className={`space-y-4 ${lang === 'AR' ? 'text-right' : 'text-left'}`}>
-                <div className="inline-block px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-2" style={{ backgroundColor: activeEvent.color + '33', color: activeEvent.color, border: `1px solid ${activeEvent.color}` }}>{activeEvent.year}</div>
-                <h3 className="text-4xl md:text-5xl font-black uppercase leading-none">{lang === 'AR' ? activeEvent.role_ar : activeEvent.role_en}</h3>
-                <p className="text-[#d8b97a] text-xl font-bold">{activeEvent.company}</p>
-                <p className="text-lg opacity-60 leading-relaxed max-w-lg">{lang === 'AR' ? activeEvent.details_ar : activeEvent.details_en}</p>
-              </motion.div>
-            </AnimatePresence>
-            <div className="relative aspect-video bg-zinc-900 rounded-[2rem] overflow-hidden border border-white/5 shadow-2xl">
-              <img src="dd91dc88326cda9ca4f58cfe5802cc1a.jpg" className="w-full h-full object-cover opacity-30 grayscale" alt="Preview" />
-              <div className="absolute inset-0 flex items-center justify-center"><PlayCircle size={80} className="text-white opacity-20" /></div>
-            </div>
-        </div>
-        <div ref={containerRef} onMouseMove={handleMouseMove} className="relative bg-zinc-950 p-8 pt-12 rounded-[2rem] border border-white/5 cursor-col-resize select-none overflow-hidden">
-          <div className="space-y-4 relative z-10">
-            {[0, 1, 2, 3].map(trackIdx => (
-              <div key={trackIdx} className="h-10 w-full bg-white/5 rounded-lg flex items-center relative">
-                {TIMELINE_EVENTS.filter(e => e.track === trackIdx).map(event => (
-                  <motion.div key={event.id} className="absolute h-full rounded-md border-x border-white/20 flex items-center px-4 overflow-hidden" style={{ left: `${event.start}%`, width: `${event.end - event.start}%`, backgroundColor: activeEvent.id === event.id ? event.color : event.color + '66' }}>
-                    <span className="text-[10px] font-black text-black whitespace-nowrap uppercase tracking-tighter">{event.company}</span>
-                  </motion.div>
-                ))}
-              </div>
-            ))}
-          </div>
-          <motion.div className="absolute top-0 bottom-0 w-[2px] bg-[#d8b97a] z-20 pointer-events-none" style={{ left: `${hoverX}%` }} />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// --- FILM STRIP WORK SECTION ---
-const FilmStripColumn = ({ videos, speed, reverse, onSelect }) => {
-  return (
-    <div className="flex flex-col gap-4 relative">
-      <motion.div 
-        animate={{ y: reverse ? [0, -1500] : [-1500, 0] }}
-        transition={{ repeat: Infinity, duration: speed, ease: "linear" }}
-        className="flex flex-col gap-4"
-      >
-        {[...videos, ...videos].map((url, i) => (
-          <div key={i} className="group relative w-full aspect-[9/16] md:aspect-[3/4] bg-zinc-900 rounded-sm overflow-hidden cursor-pointer border-x-[8px] md:border-x-[12px] border-black flex flex-col">
-            <div className="absolute left-0 top-0 bottom-0 w-2 md:w-3 flex flex-col justify-around py-2 z-20">
-              {[...Array(6)].map((_, j) => <div key={j} className="w-full aspect-square bg-white/20 rounded-sm" />)}
-            </div>
-            <div className="absolute right-0 top-0 bottom-0 w-2 md:w-3 flex flex-col justify-around py-2 z-20">
-              {[...Array(6)].map((_, j) => <div key={j} className="w-full aspect-square bg-white/20 rounded-sm" />)}
-            </div>
-            <img src={getThumbnail(url)} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" alt="Clip" />
-            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-              <div onClick={() => onSelect(url)} className="p-4 bg-white/10 backdrop-blur-md rounded-full scale-0 group-hover:scale-100 transition-transform duration-500 hover:bg-[#d8b97a] hover:text-black shadow-xl">
-                <Play size={24} />
-              </div>
-            </div>
-          </div>
-        ))}
-      </motion.div>
-    </div>
-  );
-};
-
-const WorkSection = ({ lang }) => {
-  const [selectedVideo, setSelectedVideo] = useState(null);
-  const col1 = useMemo(() => VIDEO_LINKS.slice(0, 9), []);
-  const col2 = useMemo(() => VIDEO_LINKS.slice(9, 18), []);
-  const col3 = useMemo(() => VIDEO_LINKS.slice(18, 28), []);
-
-  return (
-    <section id="works" className="py-24 bg-black overflow-hidden relative">
-      <div className="max-w-7xl mx-auto px-6 mb-16 relative z-40">
-        <h2 className="text-6xl md:text-9xl font-black uppercase tracking-tighter text-white/5 absolute -top-10 left-0 w-full overflow-hidden whitespace-nowrap">PORTFOLIO REEL</h2>
-        <h3 className={`text-4xl md:text-6xl font-black uppercase text-[#d8b97a] relative ${lang === 'AR' ? 'text-right' : 'text-left'}`}>
-          {lang === 'AR' ? 'أعمالي المختارة' : 'Selected Works'}
-        </h3>
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 h-[800px] overflow-hidden relative">
-        <div className="absolute inset-0 z-30 pointer-events-none bg-gradient-to-b from-black via-transparent to-black" />
-        <FilmStripColumn videos={col1} speed={45} onSelect={setSelectedVideo} />
-        <FilmStripColumn videos={col2} speed={35} reverse={true} onSelect={setSelectedVideo} />
-        <div className="hidden md:block">
-          <FilmStripColumn videos={col3} speed={55} onSelect={setSelectedVideo} />
-        </div>
-      </div>
-
-      <AnimatePresence>
-        {selectedVideo && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4">
-            <button onClick={() => setSelectedVideo(null)} className="absolute top-6 right-6 text-white hover:text-[#d8b97a] transition-colors"><X size={40}/></button>
-            <div className="w-full max-w-5xl aspect-video bg-black rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/10">
-              <iframe src={`${selectedVideo}?autoplay=1`} className="w-full h-full" frameBorder="0" allow="autoplay; fullscreen" allowFullScreen></iframe>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </section>
-  );
-};
-
-export default function App() {
-  const [isDark, setIsDark] = useState(true);
-  const [lang, setLang] = useState('EN');
-
-  return (
-    <div className={`min-h-screen transition-colors duration-700 font-['Montserrat',sans-serif] overflow-x-hidden ${
-      isDark ? 'bg-[#050505] text-white' : 'bg-[#f8f8f8] text-black'
-    } ${lang === 'AR' ? 'rtl' : 'ltr'}`}>
-      
-      <style>{`
-        .bg-hero { background-image: url('Ract.jpg'); background-size: cover; background-position: center; background-attachment: fixed; filter: brightness(0.3) contrast(1.2); }
-        .scanline { width: 100%; height: 3px; background: rgba(216, 185, 122, 0.1); position: absolute; top: 0; left: 0; pointer-events: none; animation: scanline 6s linear infinite; z-index: 10; }
-        @keyframes scanline { 0% { transform: translateY(-100%); } 100% { transform: translateY(500%); } }
-        .crt-flicker { animation: crtEffect 0.1s infinite; }
-        @keyframes crtEffect { 0% { opacity: 0.95; } 50% { opacity: 1; } 100% { opacity: 0.98; } }
-      `}</style>
-
-      {/* Navigation */}
-      <nav className={`fixed top-0 w-full z-50 px-6 py-4 md:px-12 flex justify-between items-center backdrop-blur-xl border-b ${
-        isDark ? 'border-white/5 bg-black/40' : 'border-black/5 bg-white/40'
-      }`}>
-        <div className="text-xl font-black tracking-tighter uppercase">
-          HESHAM <span className="text-[#d8b97a]">ABDELHAMED</span>
-        </div>
-        <div className="hidden md:flex gap-8 items-center">
-          {['Experience', 'Works', 'Contact'].map((item) => (
-            <button key={item} onClick={() => document.getElementById(item.toLowerCase())?.scrollIntoView({behavior: 'smooth'})}
-              className="text-[10px] font-bold hover:text-[#d8b97a] tracking-[0.2em] uppercase transition-all">
-              {lang === 'AR' ? (item === 'Experience' ? 'الخبرة' : item === 'Works' ? 'الأعمال' : 'تواصل') : item}
-            </button>
-          ))}
-          <div className="flex items-center gap-4 ml-4">
-             <button onClick={() => setLang(lang === 'EN' ? 'AR' : 'EN')} className="px-4 py-1.5 rounded-full border border-[#d8b97a] text-[10px] font-black hover:bg-[#d8b97a] hover:text-black transition-all flex items-center gap-2">
-               <Globe size={14}/> {lang === 'EN' ? 'العربية' : 'EN'}
-             </button>
-             <button onClick={() => setIsDark(!isDark)} className="p-2 bg-white/5 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all">
-              {isDark ? <Sun size={16} /> : <Moon size={16} />}
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0 bg-hero" />
-        <div className="absolute inset-0 z-5 bg-gradient-to-b from-black/80 via-transparent to-[#050505]" />
-        
-        <div className="relative z-10 text-center px-6">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
-            <h1 className="text-6xl md:text-[12rem] font-black tracking-tighter leading-[0.85] uppercase">
-              {lang === 'AR' ? 'راوي' : 'STORY'}<br />
-              <span className="text-transparent italic" style={{ WebkitTextStroke: `1.5px ${isDark ? '#d8b97a' : '#000'}` }}>
-                {lang === 'AR' ? 'القصص' : 'TELLER'}
-              </span>
-            </h1>
-            <p className="mt-8 text-[#d8b97a] text-xs md:text-lg font-bold tracking-[0.4em] md:tracking-[0.8em] uppercase max-w-2xl mx-auto">
-              {lang === 'AR' ? 'منتج مرئي • مدير إبداعي' : 'Visual Producer • Creative Brand Director'}
-            </p>
-          </motion.div>
-        </div>
-        
-        <div className="absolute bottom-12 w-full max-w-6xl px-12 flex flex-wrap justify-center gap-8 md:gap-24 z-20">
-          {(lang === 'AR' ? [
-            { label: 'سنوات الخبرة', val: 12, suffix: '+' },
-            { label: 'فيلم وثائقي', val: 40, suffix: '+' },
-            { label: 'دولة', val: 10, suffix: '+' },
-            { label: 'مشروع/شهر', val: 8, suffix: '+' }
-          ] : [
-            { label: 'Years Experience', val: 12, suffix: '+' },
-            { label: 'Documentary Films', val: 40, suffix: '+' },
-            { label: 'Countries Covered', val: 10, suffix: '+' },
-            { label: 'Projects/Month', val: 8, suffix: '+' }
-          ]).map((s, i) => (
-            <div key={i} className="text-center group">
-              <div className="text-3xl md:text-5xl font-black text-[#d8b97a] group-hover:scale-110 transition-transform">
-                <CountUp value={s.val} suffix={s.suffix} />
-              </div>
-              <p className="text-[9px] uppercase tracking-widest opacity-40 mt-1">{s.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <SectionDivider />
-
-      {/* Experience Section (Original Edit Suite) */}
-      <section id="experience" className="bg-zinc-950/20">
-         <VideoEditorTimeline lang={lang} />
-      </section>
-
-      <SectionDivider />
-
-      {/* Work Section (Film Strip) */}
-      <WorkSection lang={lang} />
-
-      <SectionDivider />
-
-      {/* Contact Section (Original Vintage TV) */}
-      <section id="contact" className="py-40 px-6 relative overflow-hidden bg-black min-h-screen flex items-center">
-        <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-16 items-center">
-          <div className="relative">
-            <div className="bg-[#1a1a1a] p-6 md:p-10 rounded-[4rem] border-t-8 border-x-8 border-[#252525] shadow-[0_40px_100px_rgba(0,0,0,1)] relative z-20 overflow-hidden">
-              <div className="relative aspect-square bg-[#0a0a0a] rounded-[2.5rem] overflow-hidden border-4 border-black group">
-                <div className="scanline" />
-                <motion.div animate={{ opacity: [0.98, 1, 0.95, 1] }} transition={{ duration: 0.15, repeat: Infinity }} className="w-full h-full crt-flicker">
-                  <img src="HESHAM.jpg" className="w-full h-full object-cover grayscale brightness-110 contrast-125" alt="TV Profile" />
-                </motion.div>
-              </div>
-              <div className="mt-8 flex flex-wrap justify-between items-center gap-6">
-                <div className="flex gap-4 items-center">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#111] to-[#222] border border-white/10 shadow-xl flex items-center justify-center">
-                    <div className="w-1 h-4 bg-red-600 rounded-full animate-pulse shadow-[0_0_10px_red]" />
-                  </div>
-                </div>
-                <div className="flex gap-3">
-                  {[{ icon: <Linkedin size={20}/>, href: "https://linkedin.com/in/heshamabdelhamed" }, { icon: <Instagram size={20}/>, href: "https://instagram.com/hisham.abdlhamed" }, { icon: <Facebook size={20}/>, href: "https://facebook.com/hishamabdelhamedd" }, { icon: <Mail size={20}/>, href: "mailto:per.hisham@gmail.com" }].map((social, idx) => (
-                    <motion.a key={idx} href={social.href} target="_blank" whileHover={{ scale: 1.1, backgroundColor: "#d8b97a", color: "#000" }} className="w-10 h-10 md:w-12 md:h-12 bg-black border border-white/10 rounded-lg flex flex-col items-center justify-center transition-all">
-                      {social.icon}
-                    </motion.a>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className={`relative lg:pl-10 space-y-12 ${lang === 'AR' ? 'text-right' : 'text-left'}`}>
-            <h2 className="text-7xl md:text-9xl font-black uppercase tracking-tighter italic leading-none opacity-5 absolute -top-20">CONTACT</h2>
-            <div className="relative space-y-16">
-              <motion.div initial={{ x: 50, opacity: 0 }} whileInView={{ x: 0, opacity: 1 }} className="group">
-                <p className="text-[10px] font-black text-[#d8b97a] tracking-[0.6em] uppercase mb-4">{lang === 'AR' ? 'المملكة العربية السعودية' : 'SAUDI ARABIA'}</p>
-                <a href="tel:+966503064408" className="block overflow-hidden" style={{ direction: 'ltr' }}>
-                  <span className="text-5xl md:text-8xl font-black tracking-tighter hover:text-[#d8b97a] transition-all block">+966 50 306 4408</span>
-                </a>
-              </motion.div>
-              <div className="inline-flex items-center gap-6 px-10 py-6 border-4 border-[#d8b97a] rounded-full rotate-[-3deg]">
-                  <div className="w-4 h-4 rounded-full bg-[#d8b97a] animate-ping" />
-                  <span className="text-2xl font-black uppercase tracking-widest text-[#d8b97a]">
-                    {lang === 'AR' ? 'وظفني الآن' : 'HIRE NOW'}
-                  </span>
-               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <footer className="py-12 border-t border-white/5 text-center bg-black opacity-30">
-        <p className="text-[10px] font-black tracking-[0.5em] uppercase">Hesham Abdelhamed • Visual Storyteller • 2026</p>
-      </footer>
-    </div>
-  );
+<style>
+body{
+  margin:0;
+  font-family: 'Montserrat', sans-serif;
+  background:#050505;
+  color:#fff;
+  overflow-x:hidden;
 }
+
+section{
+  padding:100px 20px;
+}
+
+/* HERO */
+.hero{
+  height:100vh;
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+
+.hero img{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:.4;
+}
+
+.overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.7);
+}
+
+.hero h1{
+  font-size:60px;
+  font-weight:900;
+}
+
+.gold{
+  color:#d8b97a;
+}
+
+/* Timeline */
+.timeline{
+  display:flex;
+  overflow-x:auto;
+  gap:20px;
+}
+
+.timeline-card{
+  min-width:300px;
+  background:#111;
+  padding:20px;
+  border-radius:10px;
+  transition:.3s;
+}
+
+.timeline-card:hover{
+  transform:scale(1.05);
+  border:1px solid #d8b97a;
+}
+
+/* Film strip */
+.film{
+  display:flex;
+  overflow-x:auto;
+  gap:20px;
+}
+
+.film img{
+  width:250px;
+  height:350px;
+  object-fit:cover;
+  filter:grayscale(100%);
+  transition:.4s;
+}
+
+.film img:hover{
+  filter:none;
+  transform:scale(1.1);
+}
+
+/* Contact TV */
+.tv{
+  width:300px;
+  margin:auto;
+  background:#111;
+  padding:20px;
+  border-radius:20px;
+  text-align:center;
+}
+
+.tv img{
+  width:100%;
+  border-radius:10px;
+}
+
+.icons{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  margin-top:20px;
+}
+
+.icons a{
+  color:#999;
+  font-size:20px;
+  transition:.3s;
+}
+
+.icons a:hover{
+  color:#d8b97a;
+}
+
+/* Footer */
+footer{
+  text-align:center;
+  padding:40px;
+  opacity:.4;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <img src="https://images.unsplash.com/photo-1519183071298-a2962e9c97c5">
+  <div class="overlay"></div>
+
+  <div>
+    <h1>Hesham <span class="gold">Abdelhamed</span></h1>
+    <p>STORY TELLER</p>
+    <p>Visual Producer • Creative Director • Filmmaker • Documentary</p>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section>
+  <h2 class="gold">Timeline</h2>
+  <div class="timeline">
+    <div class="timeline-card">Media Vision 2017-2018</div>
+    <div class="timeline-card">Gamma Rapho 2018-2020</div>
+    <div class="timeline-card">Waya Media 2020-2022</div>
+    <div class="timeline-card">Baheya 2022-2023</div>
+    <div class="timeline-card">Flow Medical 2024</div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section>
+  <h2 class="gold">About</h2>
+  <p style="max-width:600px;margin:auto;">
+    Filmmaker and multimedia producer creating cinematic storytelling experiences.
+  </p>
+</section>
+
+<!-- FILM STRIP -->
+<section>
+  <h2 class="gold">My Work</h2>
+  <div class="film">
+    <img src="https://picsum.photos/300/400?1">
+    <img src="https://picsum.photos/300/400?2">
+    <img src="https://picsum.photos/300/400?3">
+    <img src="https://picsum.photos/300/400?4">
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section>
+  <h2 class="gold">Contact</h2>
+
+  <div class="tv">
+    <img src="me.jpg">
+    <div class="icons">
+      <a href="#">in</a>
+      <a href="#">ig</a>
+      <a href="#">tt</a>
+      <a href="#">mail</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+© 2026 Hesham Abdelhamed • Copyright
+</footer>
+
+<script>
+// HERO animation
+gsap.from(".hero h1", {opacity:0, y:50, duration:1});
+gsap.from(".hero p", {opacity:0, y:30, delay:.5});
+
+// Scroll animation
+gsap.utils.toArray("section").forEach(sec=>{
+  gsap.from(sec,{
+    opacity:0,
+    y:100,
+    duration:1,
+    scrollTrigger:{
+      trigger:sec,
+      start:"top 80%"
+    }
+  });
+});
+</script>
+
+</body>
+</html>
