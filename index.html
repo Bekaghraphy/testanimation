@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hesham Abdelhamed | Portfolio</title>
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- React & Libraries -->
@@ -15,199 +15,104 @@
     <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
 
     <style>
-        body { font-family: 'Montserrat', sans-serif; background-color: #050505; color: white; overflow-x: hidden; }
+        :root {
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --accent-color: #d8b97a;
+            --panel-bg: #232323;
+        }
+
+        .light-mode {
+            --bg-color: #f5f5f5;
+            --text-color: #111111;
+            --accent-color: #b08d4b;
+            --panel-bg: #e0e0e0;
+        }
+
+        body { 
+            font-family: 'Montserrat', 'Cairo', sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            overflow-x: hidden; 
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
         
-        /* Updated Local Video Background Implementation */
+        .rtl { direction: rtl; font-family: 'Cairo', sans-serif; }
+        .ltr { direction: ltr; font-family: 'Montserrat', sans-serif; }
+
+        /* Existing Styles Retained */
         .video-background-wrapper {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-            pointer-events: none;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; overflow: hidden; pointer-events: none;
             background: #000;
         }
-
-        .video-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
         .video-container video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Ensures coverage on all screen sizes/orientations */
+            width: 100%; height: 100%; object-fit: cover;
             filter: brightness(0.4) contrast(1.1) saturate(0.8);
         }
-
         .video-overlay-gradient {
-            position: fixed;
-            inset: 0;
+            position: fixed; inset: 0;
             background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.4) 100%),
                         linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 50%, rgba(0,0,0,0.9) 100%);
-            z-index: -1;
-            pointer-events: none;
+            z-index: -1; pointer-events: none;
         }
-        
-        /* Nav Bar Glassmorphism */
         .nav-glass {
             background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
+        .light-mode .nav-glass {
+            background: rgba(255, 255, 255, 0.7);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
 
         /* TV Frame Styling */
         .tv-frame {
-            border: 18px solid #222;
-            border-bottom-width: 35px;
-            border-radius: 45px;
-            background: #111;
-            position: relative;
+            border: 18px solid #222; border-bottom-width: 35px; border-radius: 45px;
+            background: #111; position: relative;
             box-shadow: 0 50px 100px -20px rgba(0,0,0,0.8), inset 0 0 40px rgba(0,0,0,1);
         }
-        .tv-screen-content {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            border-radius: 10px;
-            overflow: hidden;
-            background: #000;
-        }
-        .scanline { 
-            width: 100%; 
-            height: 4px; 
-            background: rgba(255, 255, 255, 0.05); 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            pointer-events: none;
-            animation: scan 6s linear infinite; 
-            z-index: 10;
-        }
+        .tv-screen-content { position: relative; width: 100%; height: 100%; border-radius: 10px; overflow: hidden; background: #000; }
+        .scanline { width: 100%; height: 4px; background: rgba(255, 255, 255, 0.05); position: absolute; top: 0; left: 0; pointer-events: none; animation: scan 6s linear infinite; z-index: 10; }
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 
-        /* Premiere Timeline */
-        .premiere-bg { background-color: rgba(26, 26, 26, 0.8); backdrop-filter: blur(10px); }
-        .premiere-panel { background-color: #232323; border: 1px solid #111; }
+        /* Film Strip */
+        .film-strip-container { background: rgba(0, 0, 0, 0.5); padding: 40px 0; overflow: hidden; position: relative; }
+        .film-strip { display: flex; gap: 15px; width: max-content; animation: film-scroll 60s linear infinite; }
+        @keyframes film-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .film-frame { width: 320px; aspect-ratio: 16/9; background: #111; position: relative; border-left: 10px solid #1a1a1a; border-right: 10px solid #1a1a1a; flex-shrink: 0; cursor: pointer; }
+        .film-frame::before, .film-frame::after { content: ''; position: absolute; left: -10px; right: -10px; height: 20px; background-image: radial-gradient(circle, #000 35%, transparent 40%); background-size: 20px 20px; z-index: 2; }
+        .film-frame::before { top: 5px; } .film-frame::after { bottom: 5px; }
+        .film-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; filter: grayscale(0.5) contrast(1.2); transition: all 0.5s ease; }
+        .film-frame:hover .film-img { opacity: 1; filter: grayscale(0) contrast(1); }
+
+        /* Contact Section Interactivity */
+        .contact-interactive-bg {
+            position: absolute; inset: 0;
+            background-image: url('276dc366b2e06605263a41d5b50333c4.jpg');
+            background-size: cover; background-position: center;
+            opacity: 0.15; mix-blend-mode: screen;
+            transition: opacity 0.5s ease, transform 0.1s ease-out;
+            pointer-events: none; z-index: 1;
+        }
+        #contact:hover .contact-interactive-bg { opacity: 0.45; }
+
+        .animate-marquee { display: inline-block; animation: marquee 20s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
         .track-label { width: 55px; background: #353535; border-right: 2px solid #111; font-size: 9px; font-weight: 800; color: #888; display: flex; align-items: center; justify-content: center; text-transform: uppercase; }
         .playhead-line { width: 1px; height: 100%; background: #40a9ff; position: absolute; top: 0; pointer-events: none; z-index: 60; box-shadow: 0 0 10px rgba(64, 169, 255, 0.5); }
         .playhead-head { width: 12px; height: 16px; background: #40a9ff; clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%); position: absolute; top: 0; transform: translateX(-50%); }
+        .premiere-panel { background-color: var(--panel-bg); border: 1px solid rgba(255,255,255,0.05); }
 
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        .animate-marquee { display: inline-block; animation: marquee 20s linear infinite; }
-        
-        .ltr { direction: ltr; }
-
-        /* Film Strip Specific Styles */
-        .film-strip-container {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 40px 0;
-            overflow: hidden;
-            position: relative;
-        }
-        .film-strip {
-            display: flex;
-            gap: 15px;
-            width: max-content;
-            animation: film-scroll 40s linear infinite;
-        }
-        @keyframes film-scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-        .film-frame {
-            width: 320px;
-            aspect-ratio: 16/9;
-            background: #111;
-            position: relative;
-            border-left: 10px solid #1a1a1a;
-            border-right: 10px solid #1a1a1a;
-            flex-shrink: 0;
-            cursor: pointer;
-        }
-        .film-frame::before, .film-frame::after {
-            content: '';
-            position: absolute;
-            left: -10px;
-            right: -10px;
-            height: 20px;
-            background-image: radial-gradient(circle, #000 35%, transparent 40%);
-            background-size: 20px 20px;
-            z-index: 2;
-        }
-        .film-frame::before { top: 5px; }
-        .film-frame::after { bottom: 5px; }
-        .film-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.7;
-            filter: grayscale(0.5) contrast(1.2);
-            transition: all 0.5s ease;
-        }
-        .film-frame:hover .film-img {
-            opacity: 1;
-            filter: grayscale(0) contrast(1);
-        }
-
-        /* NEW: Contact Section Specific Styles */
-        .contact-grid-paper {
-            background-image: linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
-        .sketch-font {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 900;
-        }
-        .pin-red {
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
-            background: radial-gradient(circle at 30% 30%, #ff4d4d, #990000);
-            border-radius: 50%;
-        }
-        .sticky-note {
-            box-shadow: 2px 5px 15px rgba(0,0,0,0.6);
-            transform: rotate(-2deg);
-        }
-        .floating-image {
-            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8));
-            mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-        }
-
-        /* Cinematic Background Elements */
-        .studio-lights-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('276dc366b2e06605263a41d5b50333c4.jpg');
-            background-size: cover;
-            background-position: top center;
-            opacity: 0.15;
-            mix-blend-mode: screen;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        @keyframes light-drift {
-            0%, 100% { transform: translateY(0) scale(1.0); }
-            50% { transform: translateY(-10px) scale(1.02); }
-        }
-        .animate-light-drift {
-            animation: light-drift 10s ease-in-out infinite;
-        }
+        /* Floating Image Style */
+        .floating-image { filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8)); mask-image: linear-gradient(to bottom, black 80%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%); }
     </style>
 </head>
 <body class="ltr">
 
-    <!-- Persistent Global Video Background (Using local 5.mp4) -->
     <div class="video-background-wrapper">
         <div class="video-container">
             <video autoplay muted loop playsinline>
@@ -233,101 +138,53 @@
           X: () => <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>,
           Selection: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#40a9ff" strokeWidth="3"><path d="M3 3l7 18 3-7 7-3-17-8z"/></svg>,
           Razor: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2"><path d="M11 2v20M7 2l8 20"/></svg>,
-          Mail: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/><rect width="20" height="16" x="2" y="4" rx="2"/></svg>
+          Mail: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/><rect width="20" height="16" x="2" y="4" rx="2"/></svg>,
+          Sun: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>,
+          Moon: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
         };
 
         const TIMELINE_EVENTS = [
-          { 
-            id: 1, 
-            year: "Jan 2014 — Jan 2018", 
-            role_en: "Multimedia Producer", 
-            company: "Gamma Rapho Francias Agency", 
-            details_en: "Produced content documenting pivotal moments across the Arab world during conflict and social transformation. Supplied footage to Al Arabiya, BBC, DW, Reuters, AP, and Al Jazeera.",
-            location: "France · Lebanon · Egypt · Syria · Sudan · Libya",
-            track: "V2", 
-            color: "#5c3a91", 
-            start: 0, 
-            end: 16, 
-            video: "https://player.vimeo.com/video/348818970" 
-          },
-          { 
-            id: 2, 
-            year: "Jan 2018 — Jan 2022", 
-            role_en: "Multimedia Producer", 
-            company: "Media Vision (Al Ghad TV)", 
-            details_en: "Produced 40+ documentary films across 5 Arab countries. Series include Habr Ala Al-Raseef (21 films) and Muna' Min Al-Tadawol (19 films).",
-            location: "Egypt · Lebanon · Tunisia · Morocco · Jordan",
-            track: "V1", 
-            color: "#2b4c7e", 
-            start: 16, 
-            end: 33, 
-            video: "https://player.vimeo.com/video/782962222" 
-          },
-          { 
-            id: 3, 
-            year: "Jan 2019 — Jan 2021", 
-            role_en: "Multimedia Producer", 
-            company: "WAYA Media", 
-            details_en: "Produced inspiring startup and entrepreneurship stories for a leading Egyptian media platform, capturing the journeys of emerging businesses.",
-            location: "Egypt",
-            track: "V2", 
-            color: "#2d5a27", 
-            start: 33, 
-            end: 50, 
-            video: "https://player.vimeo.com/video/1093436208" 
-          },
-          { 
-            id: 4, 
-            year: "Jan 2022 — Jan 2023", 
-            role_en: "Multimedia Manager", 
-            company: "Baheya Foundation", 
-            details_en: "Led the filming and editing department for Egypt's leading breast cancer charity. Crafted respectful documentary portraits of women facing illness.",
-            location: "Egypt",
-            track: "V1", 
-            color: "#8a2b53", 
-            start: 50, 
-            end: 66, 
-            video: "https://player.vimeo.com/video/1081226158" 
-          },
-          { 
-            id: 5, 
-            year: "Jan 2023 — Jan 2024", 
-            role_en: "Multimedia Producer", 
-            company: "Freelance — International Media", 
-            details_en: "Delivered report, sports, and documentary projects for BBC, Deutsche Welle, France Télévisions, and PureMinds. Produced content for Al Arabiya and Now.",
-            location: "Egypt · Saudi Arabia",
-            track: "V2", 
-            color: "#4a4a4a", 
-            start: 66, 
-            end: 83, 
-            video: "https://player.vimeo.com/video/1088303838" 
-          },
-          { 
-            id: 6, 
-            year: "Jan 2024 — Present", 
-            role_en: "Multimedia Producer", 
-            company: "FLOW Medical Solutions (HMG)", 
-            details_en: "Leading production and post-production for Saudi Arabia's leading medical solutions company. Delivering 8+ brand-driven projects monthly.",
-            location: "Riyadh, Saudi Arabia",
-            track: "V1", 
-            color: "#d8b97a", 
-            start: 83, 
-            end: 100, 
-            video: "https://player.vimeo.com/video/1081231929" 
-          }
+          { id: 1, year: "2014 — 2018", role_en: "Multimedia Producer", role_ar: "منتج وسائط متعددة", company: "Gamma Rapho Agency", track: "V2", color: "#5c3a91", start: 0, end: 16, video: "https://player.vimeo.com/video/348818970" },
+          { id: 2, year: "2018 — 2022", role_en: "Multimedia Producer", role_ar: "منتج وسائط متعددة", company: "Al Ghad TV", track: "V1", color: "#2b4c7e", start: 16, end: 33, video: "https://player.vimeo.com/video/782962222" },
+          { id: 3, year: "2019 — 2021", role_en: "Multimedia Producer", role_ar: "منتج وسائط متعددة", company: "WAYA Media", track: "V2", color: "#2d5a27", start: 33, end: 50, video: "https://player.vimeo.com/video/1093436208" },
+          { id: 4, year: "2022 — 2023", role_en: "Multimedia Manager", role_ar: "مدير وسائط متعددة", company: "Baheya Foundation", track: "V1", color: "#8a2b53", start: 50, end: 66, video: "https://player.vimeo.com/video/1081226158" },
+          { id: 5, year: "2023 — 2024", role_en: "Freelance Producer", role_ar: "منتج مستقل", company: "BBC / DW / Reuters", track: "V2", color: "#4a4a4a", start: 66, end: 83, video: "https://player.vimeo.com/video/1088303838" },
+          { id: 6, year: "2024 — Present", role_en: "Multimedia Producer", role_ar: "منتج وسائط متعددة", company: "FLOW Medical (HMG)", track: "V1", color: "#d8b97a", start: 83, end: 100, video: "https://player.vimeo.com/video/1081231929" }
         ];
 
-        const VIDEO_LINKS = [
+        const EXTENDED_VIDEOS = [
           "https://player.vimeo.com/video/1081231929", "https://player.vimeo.com/video/1093436208", "https://player.vimeo.com/video/1012761186",
           "https://player.vimeo.com/video/782962222", "https://player.vimeo.com/video/1081226158", "https://player.vimeo.com/video/348818970",
-          "https://player.vimeo.com/video/1137725566", "https://player.vimeo.com/video/1088303838", "https://player.vimeo.com/video/697540206"
+          "https://player.vimeo.com/video/1137725566", "https://player.vimeo.com/video/1088303838", "https://player.vimeo.com/video/697540206",
+          "https://player.vimeo.com/video/348850766", "https://player.vimeo.com/video/1127837184", "https://player.vimeo.com/video/348850143",
+          "https://www.youtube.com/embed/n4gmpMHBUK4", "https://player.vimeo.com/video/1141818722", "https://www.youtube.com/embed/DqZM6chIz8c",
+          "https://player.vimeo.com/video/815712178", "https://www.youtube.com/embed/6J3qrLEB6Uw", "https://www.youtube.com/embed/Lb1WNNI-mJU",
+          "https://www.youtube.com/embed/k-BVul-oCNQ", "https://www.youtube.com/embed/B0KC9WzoYfw", "https://www.youtube.com/embed/8o3vHHhsed4",
+          "https://player.vimeo.com/video/1127838352", "https://www.youtube.com/embed/sYUCtAFHbfc", "https://www.youtube.com/embed/sz8RTnunR-U",
+          "https://player.vimeo.com/video/919167340", "https://www.youtube.com/embed/bTyCS3wRJBc", "https://www.youtube.com/embed/34fza20tlhA",
+          "https://www.youtube.com/embed/cc5rdSxI6ws"
         ];
+
+        const Translations = {
+          en: {
+            home: "Home", exp: "Experience", work: "Portfolio", contact: "Contact",
+            heroTitle: "STORY", heroSubtitle: "TELLER", heroTag: "Visual Producer • Creative Brand Director",
+            expTitle: "WORK EXPERIENCE", filmTitle: "CINEMATIC FILM STRIP", contactTitle: "CONNECT",
+            download: "Portfolio PDF", inquiry: "Direct Inquiry", ksa: "KSA Office", egy: "EGY Office"
+          },
+          ar: {
+            home: "الرئيسية", exp: "الخبرة", work: "الأعمال", contact: "اتصل بنا",
+            heroTitle: "راوي", heroSubtitle: "قصص", heroTag: "منتج بصري • مدير براند إبداعي",
+            expTitle: "الخبرة العملية", filmTitle: "شريط الفيلم السينمائي", contactTitle: "تواصل معي",
+            download: "ملف الأعمال PDF", inquiry: "طلب تواصل مباشر", ksa: "مكتب السعودية", egy: "مكتب مصر"
+          }
+        };
 
         const SectionDivider = ({ text }) => (
           <div className="w-full h-20 bg-[#0a0a0a]/30 backdrop-blur-sm flex items-center justify-center overflow-hidden border-y border-white/5 relative">
             <div className="absolute inset-0 flex items-center opacity-5">
                <div className="whitespace-nowrap animate-marquee font-black text-6xl uppercase">
-                  {text} • {text} • {text} • {text} • {text} • {text} • {text} • {text} • {text} • {text}
+                  {text} • {text} • {text} • {text} • {text} • {text} • {text} • {text}
                </div>
             </div>
             <div className="relative z-10 flex items-center gap-4">
@@ -339,272 +196,220 @@
         );
 
         function App() {
+          const [lang, setLang] = useState('en');
+          const [isDark, setIsDark] = useState(true);
           const [hoverX, setHoverX] = useState(90);
           const [activeEvent, setActiveEvent] = useState(TIMELINE_EVENTS[5]);
           const [selectedVideo, setSelectedVideo] = useState(null);
+          const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+          const t = Translations[lang];
+
+          const toggleLang = () => {
+            const newLang = lang === 'en' ? 'ar' : 'en';
+            setLang(newLang);
+            document.body.className = newLang === 'ar' ? 'rtl' : 'ltr';
+          };
+
+          const toggleTheme = () => {
+            setIsDark(!isDark);
+            document.body.classList.toggle('light-mode');
+          };
+
+          const handleMouseMove = (e) => {
+            if (e.currentTarget.id === "contact") {
+              const rect = e.currentTarget.getBoundingClientRect();
+              setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+            }
+          };
+
+          const getThumb = (url) => {
+            if (url.includes('vimeo')) return `https://vumbnail.com/${url.split('/').pop()}.jpg`;
+            if (url.includes('youtube') || url.includes('youtu.be')) {
+               const id = url.split('/').pop().split('?')[0];
+               return `https://img.youtube.com/vi/${id}/mqdefault.jpg`;
+            }
+            return "";
+          };
 
           return (
-            <div className="min-h-screen text-white ltr">
+            <div className={`min-h-screen ${lang === 'ar' ? 'rtl' : 'ltr'}`}>
               
               {/* --- NAV BAR --- */}
               <nav className="fixed top-0 w-full z-[100] nav-glass px-8 py-4 flex items-center">
-                <div className="flex-1">
+                <div className="flex-1 flex items-center gap-4">
                   <div className="text-xl font-black tracking-tighter uppercase flex items-center gap-2">
                      <div className="w-3 h-3 bg-red-600 rounded-full animate-pulse" />
-                     HESHAM <span className="text-[#d8b97a] ml-1">ABDELHAMED</span>
+                     {lang === 'en' ? 'HESHAM' : 'هشام'} <span className="text-[#d8b97a] ml-1">{lang === 'en' ? 'ABDELHAMED' : 'عبد الحميد'}</span>
                   </div>
                 </div>
-                <div className="absolute left-1/2 -translate-x-1/2 flex gap-8 items-center">
-                   <div className="hidden md:flex gap-8 text-[10px] font-bold tracking-widest uppercase text-zinc-400">
-                      <a href="#" className="hover:text-[#d8b97a] transition-colors">Home</a>
-                      <a href="#experience" className="hover:text-[#d8b97a] transition-colors">Experience</a>
-                      <a href="#work" className="hover:text-[#d8b97a] transition-colors">Portfolio</a>
-                      <a href="#contact" className="hover:text-[#d8b97a] transition-colors">Contact</a>
-                   </div>
+                
+                <div className="hidden md:flex gap-8 text-[10px] font-bold tracking-widest uppercase text-zinc-400">
+                    <a href="#" className="hover:text-[#d8b97a] transition-colors">{t.home}</a>
+                    <a href="#experience" className="hover:text-[#d8b97a] transition-colors">{t.exp}</a>
+                    <a href="#work" className="hover:text-[#d8b97a] transition-colors">{t.work}</a>
+                    <a href="#contact" className="hover:text-[#d8b97a] transition-colors">{t.contact}</a>
                 </div>
-                <div className="flex-1 flex justify-end"></div>
+
+                <div className="flex-1 flex justify-end items-center gap-4">
+                  <button onClick={toggleTheme} className="p-2 bg-zinc-800 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all">
+                    {isDark ? <Icons.Sun /> : <Icons.Moon />}
+                  </button>
+                  <button onClick={toggleLang} className="px-3 py-1 bg-zinc-800 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-[#d8b97a] hover:text-black transition-all">
+                    {lang === 'en' ? 'العربية' : 'EN'}
+                  </button>
+                </div>
               </nav>
 
               {/* Hero Section */}
               <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-black/10 z-[1]" />
                 <div className="relative z-10 text-center px-6">
                   <motion.h1 initial={{y: 50, opacity: 0}} animate={{y: 0, opacity: 1}} className="text-7xl md:text-[11rem] font-black leading-none uppercase mb-6">
-                    STORY<br />
-                    <span className="text-transparent italic" style={{ WebkitTextStroke: "1.5px #d8b97a" }}>TELLER</span>
+                    {t.heroTitle}<br />
+                    <span className="text-transparent italic" style={{ WebkitTextStroke: `1.5px ${isDark ? '#d8b97a' : '#b08d4b'}` }}>{t.heroSubtitle}</span>
                   </motion.h1>
-                  <p className="text-[#d8b97a] text-[10px] md:text-sm font-black tracking-[0.7em] uppercase mb-12 opacity-80">
-                    Visual Producer • Creative Brand Director
-                  </p>
+                  <p className="text-[#d8b97a] text-[10px] md:text-sm font-black tracking-[0.7em] uppercase mb-12 opacity-80">{t.heroTag}</p>
                   <div className="flex gap-4 justify-center">
-                    <a href="Hesham-Abdelhamed-Portfolio.pdf" target="_blank" className="flex items-center gap-3 px-10 py-4 bg-[#d8b97a] text-black font-black uppercase tracking-widest text-[10px] rounded-full hover:bg-white transition-all shadow-[0_0_20px_rgba(216,185,122,0.3)]">
-                      <Icons.Download /> Portfolio PDF
+                    <a href="#" className="flex items-center gap-3 px-10 py-4 bg-[#d8b97a] text-black font-black uppercase tracking-widest text-[10px] rounded-full hover:bg-white transition-all shadow-[0_0_20px_rgba(216,185,122,0.3)]">
+                      <Icons.Download /> {t.download}
                     </a>
                   </div>
                 </div>
               </section>
 
-              <SectionDivider text="WORK EXPERIENCE" />
+              <SectionDivider text={t.expTitle} />
 
               {/* Experience Section */}
-              <section id="experience" className="py-24 premiere-bg border-y border-white/5 relative overflow-hidden">
-                <div className="max-w-7xl mx-auto px-6 relative z-10">
+              <section id="experience" className="py-24 premiere-bg border-y border-white/5">
+                <div className="max-w-7xl mx-auto px-6">
                   <div className="grid lg:grid-cols-12 gap-10 mb-16">
                     <div className="lg:col-span-8">
                       <div className="tv-frame aspect-video p-2">
                         <div className="tv-screen-content">
                           <div className="scanline" />
-                          <div className="absolute top-4 left-6 z-20 flex items-center gap-2">
-                             <div className="w-2 h-2 bg-red-600 rounded-full animate-pulse" />
-                             <span className="text-[10px] font-mono font-bold text-red-600">SCRUBBING TIMELINE...</span>
-                          </div>
-                          <iframe key={activeEvent.id} src={`${activeEvent.video}?background=1&autoplay=1&loop=1&muted=1`} className="w-full h-full object-cover scale-110 grayscale-[0.2]" frameBorder="0" />
+                          <iframe key={activeEvent.id} src={`${activeEvent.video}?background=1&autoplay=1&loop=1&muted=1`} className="w-full h-full object-cover scale-110" frameBorder="0" />
                         </div>
                       </div>
                     </div>
                     <div className="lg:col-span-4 premiere-panel p-8 rounded-xl shadow-2xl flex flex-col justify-center">
-                      <div className="text-[10px] text-blue-400 font-bold mb-4 tracking-widest uppercase">Project MetaData</div>
-                      <div className="space-y-4">
-                        <h3 className="text-3xl font-black uppercase leading-tight">{activeEvent.role_en}</h3>
-                        <div className="flex flex-col gap-1">
-                           <p className="text-xl font-bold text-[#d8b97a]">{activeEvent.company}</p>
-                           <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">{activeEvent.location}</p>
-                        </div>
-                        <p className="text-sm text-zinc-400 leading-relaxed italic border-l-2 border-[#d8b97a]/30 pl-4">{activeEvent.details_en}</p>
-                        <div className="pt-6 border-t border-white/10 grid grid-cols-1 gap-2 text-[10px] font-mono text-zinc-500 uppercase">
-                          <div>Date: {activeEvent.year}</div>
-                          <div className="flex gap-2">
-                            <span className="px-2 py-0.5 bg-zinc-800 rounded">4K</span>
-                            <span className="px-2 py-0.5 bg-zinc-800 rounded">HDR</span>
-                            <span className="px-2 py-0.5 bg-[#d8b97a]/20 text-[#d8b97a] rounded">MASTER</span>
-                          </div>
-                        </div>
-                      </div>
+                      <h3 className="text-3xl font-black uppercase mb-4">{lang === 'en' ? activeEvent.role_en : activeEvent.role_ar}</h3>
+                      <p className="text-xl font-bold text-[#d8b97a] mb-2">{activeEvent.company}</p>
+                      <p className="text-sm text-zinc-400 italic mb-6">Experience spanning over years of media production and creative directing.</p>
+                      <div className="text-[10px] font-mono text-zinc-500 uppercase">{activeEvent.year}</div>
                     </div>
                   </div>
+                  
+                  {/* Premiere Timeline */}
                   <div className="premiere-panel rounded-xl overflow-hidden flex shadow-2xl border-2 border-black">
                     <div className="w-14 bg-[#2b2b2b] border-r border-black flex flex-col items-center py-6 gap-8">
                       <div className="p-2 bg-[#3d3d3d] rounded cursor-pointer shadow-lg"><Icons.Selection /></div>
-                      <div className="p-2 hover:bg-[#3d3d3d] rounded cursor-pointer transition-colors"><Icons.Razor /></div>
-                      <div className="w-8 h-[1px] bg-white/5" />
-                      <div className="text-[12px] font-black text-zinc-600">T</div>
+                      <div className="p-2 hover:bg-[#3d3d3d] rounded cursor-pointer"><Icons.Razor /></div>
                     </div>
                     <div className="flex-1 relative flex flex-col bg-[#111]">
-                      <div className="h-10 bg-[#2b2b2b] border-b border-black flex items-end px-4 relative">
-                         {[...Array(11)].map((_, i) => (
-                           <div key={i} className="absolute h-4 border-l border-white/20 text-[9px] text-zinc-500 pl-1.5 font-mono" style={{left: `${i*10}%`}}>
-                             00:0{i}:00:00
-                           </div>
-                         ))}
-                      </div>
-                      <div className="relative cursor-none group" 
-                           onMouseMove={(e) => {
-                             const rect = e.currentTarget.getBoundingClientRect();
-                             const x = ((e.clientX - rect.left) / rect.width) * 100;
-                             setHoverX(x);
-                             const found = TIMELINE_EVENTS.find(ev => x >= ev.start && x <= ev.end);
-                             if(found) setActiveEvent(found);
-                           }}>
-                        <div className="playhead-line" style={{ left: `${hoverX}%` }}>
-                          <div className="playhead-head" />
-                        </div>
+                      <div className="relative h-28 cursor-crosshair" onMouseMove={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        const x = ((e.clientX - rect.left) / rect.width) * 100;
+                        setHoverX(x);
+                        const found = TIMELINE_EVENTS.find(ev => x >= ev.start && x <= ev.end);
+                        if(found) setActiveEvent(found);
+                      }}>
+                        <div className="playhead-line" style={{ left: `${hoverX}%` }}><div className="playhead-head" /></div>
                         {['V2', 'V1'].map((tName) => (
                           <div key={tName} className="flex border-b border-black">
                              <div className="track-label">{tName}</div>
-                             <div className="flex-1 h-14 relative bg-[#0d0d0d] overflow-hidden">
+                             <div className="flex-1 h-12 relative overflow-hidden">
                                {TIMELINE_EVENTS.filter(e => e.track === tName).map(ev => (
-                                 <div key={ev.id} className={`absolute h-[70%] top-[15%] rounded border-l-4 border-white/20 flex items-center px-4 text-[9px] font-black tracking-tighter uppercase transition-all duration-300 ${activeEvent.id === ev.id ? 'brightness-125 scale-y-105 z-10' : 'opacity-30 grayscale'}`}
+                                 <div key={ev.id} className={`absolute h-full border-l-4 border-white/10 flex items-center px-4 text-[9px] font-black uppercase transition-all ${activeEvent.id === ev.id ? 'brightness-125' : 'opacity-40'}`}
                                       style={{ left: `${ev.start}%`, width: `${ev.end-ev.start}%`, backgroundColor: ev.color }}>
-                                   {ev.company.split(' ')[0]}
+                                   {ev.company}
                                  </div>
                                ))}
                              </div>
                           </div>
                         ))}
-                        <div className="flex border-t-4 border-black/50">
-                           <div className="track-label text-blue-400">A1</div>
-                           <div className="flex-1 h-10 bg-zinc-900/40 relative">
-                             <div className="absolute inset-x-0 top-1/2 h-[1px] bg-green-900/30" />
-                           </div>
-                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </section>
 
-              <SectionDivider text="CINEMATIC FILM STRIP" />
+              <SectionDivider text={t.filmTitle} />
 
               {/* FILM STRIP REEL */}
               <section id="work" className="film-strip-container border-b border-white/5 relative">
                 <div className="film-strip">
-                   {[...VIDEO_LINKS, ...VIDEO_LINKS].map((url, idx) => (
+                   {[...EXTENDED_VIDEOS, ...EXTENDED_VIDEOS].map((url, idx) => (
                      <div key={idx} className="film-frame" onClick={() => setSelectedVideo(url)}>
-                       <img 
-                         src={`https://vumbnail.com/${url.split('/').pop()}.jpg`} 
-                         className="film-img" 
-                         alt="Film frame"
-                       />
+                       <img src={getThumb(url)} className="film-img" alt="Film frame" />
                        <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black/40">
-                         <div className="p-3 bg-[#d8b97a] rounded-full text-black">
-                           <Icons.Play />
-                         </div>
+                         <div className="p-3 bg-[#d8b97a] rounded-full text-black"><Icons.Play /></div>
                        </div>
                      </div>
                    ))}
                 </div>
               </section>
 
-              <SectionDivider text="CONTACT" />
+              <SectionDivider text={t.contact} />
 
-              {/* --- CONTACT SECTION WITH STUDIO LIGHTS BACKGROUND --- */}
-              <section id="contact" className="py-24 px-6 bg-[#080808] text-white relative contact-grid-paper overflow-hidden">
+              {/* --- CONTACT SECTION --- */}
+              <section id="contact" 
+                       className="py-32 px-6 bg-[#080808] relative overflow-hidden" 
+                       onMouseMove={handleMouseMove}>
                 
-                {/* Dynamic Studio Lights Background Overlay */}
-                <div className="studio-lights-bg animate-light-drift"></div>
-                
-                {/* Subtle Radial Vignette for the Background Image */}
-                <div className="absolute inset-0 z-[2] bg-gradient-to-t from-[#080808] via-transparent to-[#080808]/50 pointer-events-none"></div>
+                {/* Background Interactive Layer */}
+                <div className="contact-interactive-bg" 
+                     style={{ 
+                       transform: `translate(${(mousePos.x - 500) * 0.02}px, ${(mousePos.y - 300) * 0.02}px)` 
+                     }} />
 
-                {/* Background Text Shadow */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] select-none z-[3]">
-                   <h2 className="text-[25vw] font-black tracking-tighter uppercase sketch-font">CONNECT</h2>
-                </div>
-
-                <div className="max-w-7xl mx-auto relative z-10">
-                  <div className="flex flex-col lg:flex-row gap-16 items-center">
-                    
-                    {/* Left Side: Animated Heading & Image */}
-                    <div className="flex-1 relative flex flex-col items-center lg:items-start">
-                       <div className="relative mb-12">
-                          <motion.div 
-                            initial={{ x: -100, opacity: 0 }}
-                            whileInView={{ x: 0, opacity: 1 }}
-                            transition={{ duration: 0.8, ease: "easeOut" }}
-                            className="flex overflow-hidden"
-                          >
-                            <h2 className="text-7xl md:text-[9rem] font-black leading-none sketch-font text-white uppercase tracking-tighter whitespace-nowrap">
-                              {["C","O","N","T","A","C","T"].map((char, i) => (
-                                <motion.span 
-                                  key={i} 
-                                  animate={{ y: [0, -10, 0] }} 
-                                  transition={{ repeat: Infinity, duration: 2, delay: i * 0.1 }}
-                                  className="inline-block"
-                                >
-                                  {char}
-                                </motion.span>
-                              ))}
-                            </h2>
-                          </motion.div>
-                          
-                          {/* Pins and Sticky Notes (Darkened) */}
-                          <motion.div 
-                            initial={{ x: 20, y: -20, rotate: 10, opacity: 0 }}
-                            whileInView={{ x: 0, y: 0, rotate: -5, opacity: 1 }}
-                            className="absolute -top-10 -right-10 w-32 h-32 bg-zinc-800 sticky-note p-4 text-xs font-bold text-zinc-300 flex flex-col justify-between border border-white/10"
-                          >
-                             <div className="w-4 h-4 pin-red absolute -top-2 left-1/2 -translate-x-1/2"></div>
-                             <p>Let's tell a story that lasts forever.</p>
-                             <p className="text-[8px] opacity-50 text-[#d8b97a]">#CreativeVision</p>
-                          </motion.div>
-
-                          <div className="absolute top-1/2 left-1/2 w-6 h-6 pin-red -translate-x-1/2 -translate-y-1/2 hidden md:block"></div>
-                       </div>
-
-                       {/* Profile Image Integration */}
-                       <div className="relative group">
-                          <motion.div 
-                            initial={{ y: 50, opacity: 0 }}
-                            whileInView={{ y: 0, opacity: 1 }}
-                            className="relative z-10 w-64 md:w-80 overflow-hidden rounded-b-3xl"
-                          >
-                            <img src="Hesham.png" alt="Hesham Abdelhamed" className="w-full h-auto floating-image grayscale hover:grayscale-0 transition-all duration-700" />
-                          </motion.div>
-                          {/* Sketch border effect */}
-                          <div className="absolute -inset-4 border-2 border-dashed border-[#d8b97a]/30 rounded-full animate-[spin_20s_linear_infinite] opacity-50"></div>
-                       </div>
+                <div className="max-w-7xl mx-auto relative z-10 flex flex-col lg:flex-row gap-16 items-center">
+                  
+                  <div className="flex-1 relative">
+                    <motion.h2 
+                        initial={{ opacity: 0, scale: 0.9 }} 
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        className="text-8xl md:text-[10rem] font-black leading-none uppercase tracking-tighter"
+                        style={{ 
+                            color: 'transparent', 
+                            WebkitTextStroke: isDark ? '2px rgba(255,255,255,0.2)' : '2px rgba(0,0,0,0.2)',
+                            textShadow: `0 0 20px rgba(216,185,122,${(mousePos.x / 1000) * 0.3})`
+                        }}>
+                      {t.contactTitle}
+                    </motion.h2>
+                    <div className="mt-12">
+                      <img src="Hesham.png" alt="Hesham" className="w-80 floating-image grayscale hover:grayscale-0 transition-all duration-700" />
                     </div>
+                  </div>
 
-                    {/* Right Side: Contact Details & Socials */}
-                    <div className="flex-1 w-full relative z-[5]">
-                       <div className="space-y-8">
-                          {/* Direct Contact Card */}
-                          <div className="p-8 bg-zinc-900/80 backdrop-blur-md border-2 border-white/5 shadow-[8px_8px_0px_#d8b97a] rounded-xl transform hover:-translate-y-1 transition-transform">
-                             <div className="flex items-center gap-4 mb-4 text-[#d8b97a]">
-                                <Icons.Mail />
-                                <h4 className="text-xl font-black uppercase tracking-widest">Direct Inquiry</h4>
+                  <div className="flex-1 w-full">
+                    <div className="space-y-8">
+                       <div className="p-10 bg-zinc-900/80 backdrop-blur-xl border-2 border-[#d8b97a]/20 rounded-2xl shadow-2xl">
+                          <h4 className="text-xl font-black uppercase text-[#d8b97a] mb-6 flex items-center gap-3">
+                            <Icons.Mail /> {t.inquiry}
+                          </h4>
+                          <a href="mailto:per.hisham@gmail.com" className="text-3xl md:text-4xl font-black hover:text-[#d8b97a] transition-colors underline decoration-[#d8b97a]/30 underline-offset-8">per.hisham@gmail.com</a>
+                          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-white/5">
+                             <div>
+                               <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">{t.ksa}</p>
+                               <p className="font-black text-xl">+966 50 306 4408</p>
                              </div>
-                             <a href="mailto:per.hisham@gmail.com" className="text-2xl md:text-3xl font-black hover:text-[#d8b97a] transition-colors break-words underline decoration-white/10 decoration-4 underline-offset-4">per.hisham@gmail.com</a>
-                             
-                             <div className="mt-8 pt-6 border-t-2 border-white/5 flex flex-col md:flex-row gap-6">
-                                <div>
-                                   <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">KSA Office</p>
-                                   <p className="font-black text-xl">+966 50 306 4408</p>
-                                </div>
-                                <div>
-                                   <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">EGY Office</p>
-                                   <p className="font-black text-xl">+20 10 10 72 3207</p>
-                                </div>
+                             <div>
+                               <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">{t.egy}</p>
+                               <p className="font-black text-xl">+20 10 10 72 3207</p>
                              </div>
                           </div>
+                       </div>
 
-                          {/* Social Platforms Grid */}
-                          <div className="grid grid-cols-2 gap-4">
-                             {[
-                               { icon: <Icons.Linkedin />, label: 'LinkedIn', url: 'https://www.linkedin.com/in/hishamabdelhamed', color: 'hover:bg-[#0077b5]' },
-                               { icon: <Icons.Instagram />, label: 'Instagram', url: 'https://www.instagram.com/hisham.abdlhamed?igsh=MTZwM3VsZWd1d2hxOA%3D%3D&utm_source=qrtarget=', color: 'hover:bg-[#e1306c]' },
-                               { icon: <Icons.Facebook />, label: 'Facebook', url: 'https://facebook.com/hishamabdelhamedd', color: 'hover:bg-[#1877f2]' },
-                               { icon: <Icons.Tiktok />, label: 'TikTok', url: 'https://www.tiktok.com/@hisham.abdelhamed', color: 'hover:bg-zinc-700' }
-                             ].map((social, i) => (
-                               <a key={i} href={social.url} target="_blank" className={`flex items-center justify-between p-6 bg-zinc-900/80 backdrop-blur-md border border-white/10 shadow-[4px_4px_0px_#111] rounded-xl group transition-all ${social.color} hover:shadow-none hover:translate-x-1 hover:translate-y-1`}>
-                                  <div className="flex flex-col">
-                                     <span className="text-[9px] font-black opacity-40 uppercase tracking-widest">Connect on</span>
-                                     <span className="font-black text-lg">{social.label}</span>
-                                  </div>
-                                  <div className="scale-125 group-hover:rotate-12 transition-transform">{social.icon}</div>
-                               </a>
-                             ))}
-                          </div>
+                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          {[
+                            { icon: <Icons.Linkedin />, url: 'https://www.linkedin.com/in/hishamabdelhamed' },
+                            { icon: <Icons.Instagram />, url: 'https://www.instagram.com/hisham.abdlhamed' },
+                            { icon: <Icons.Facebook />, url: 'https://facebook.com/hishamabdelhamedd' },
+                            { icon: <Icons.Tiktok />, url: 'https://www.tiktok.com/@hisham.abdelhamed' }
+                          ].map((social, i) => (
+                            <a key={i} href={social.url} target="_blank" className="p-6 bg-zinc-900 flex justify-center items-center rounded-xl hover:bg-[#d8b97a] hover:text-black transition-all transform hover:scale-105">
+                               {social.icon}
+                            </a>
+                          ))}
                        </div>
                     </div>
                   </div>
@@ -615,9 +420,9 @@
               <AnimatePresence>
                 {selectedVideo && (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[110] bg-black/98 flex items-center justify-center p-4 backdrop-blur-xl">
-                    <button onClick={() => setSelectedVideo(null)} className="absolute top-10 right-10 text-white hover:text-[#d8b97a]"><Icons.X /></button>
-                    <div className="w-full max-w-5xl aspect-video rounded-3xl overflow-hidden shadow-2xl border border-white/10">
-                      <iframe src={`${selectedVideo}?autoplay=1`} className="w-full h-full" frameBorder="0" allow="autoplay; fullscreen" allowFullScreen />
+                    <button onClick={() => setSelectedVideo(null)} className="absolute top-10 right-10 text-white"><Icons.X /></button>
+                    <div className="w-full max-w-5xl aspect-video rounded-3xl overflow-hidden border border-white/10">
+                      <iframe src={selectedVideo.includes('youtube') ? `${selectedVideo}?autoplay=1` : `${selectedVideo}?autoplay=1`} className="w-full h-full" frameBorder="0" allow="autoplay; fullscreen" allowFullScreen />
                     </div>
                   </motion.div>
                 )}
