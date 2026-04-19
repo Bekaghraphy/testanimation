@@ -179,6 +179,30 @@
             mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
             -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
         }
+
+        /* Cinematic Background Elements */
+        .studio-lights-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('276dc366b2e06605263a41d5b50333c4.jpg');
+            background-size: cover;
+            background-position: top center;
+            opacity: 0.15;
+            mix-blend-mode: screen;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes light-drift {
+            0%, 100% { transform: translateY(0) scale(1.0); }
+            50% { transform: translateY(-10px) scale(1.02); }
+        }
+        .animate-light-drift {
+            animation: light-drift 10s ease-in-out infinite;
+        }
     </style>
 </head>
 <body class="ltr">
@@ -473,10 +497,17 @@
 
               <SectionDivider text="CONTACT" />
 
-              {/* --- UPDATED CONTACT SECTION (Dark Mode & Animated One-Liner) --- */}
+              {/* --- CONTACT SECTION WITH STUDIO LIGHTS BACKGROUND --- */}
               <section id="contact" className="py-24 px-6 bg-[#080808] text-white relative contact-grid-paper overflow-hidden">
+                
+                {/* Dynamic Studio Lights Background Overlay */}
+                <div className="studio-lights-bg animate-light-drift"></div>
+                
+                {/* Subtle Radial Vignette for the Background Image */}
+                <div className="absolute inset-0 z-[2] bg-gradient-to-t from-[#080808] via-transparent to-[#080808]/50 pointer-events-none"></div>
+
                 {/* Background Text Shadow */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] select-none">
+                <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] select-none z-[3]">
                    <h2 className="text-[25vw] font-black tracking-tighter uppercase sketch-font">CONNECT</h2>
                 </div>
 
@@ -535,10 +566,10 @@
                     </div>
 
                     {/* Right Side: Contact Details & Socials */}
-                    <div className="flex-1 w-full">
+                    <div className="flex-1 w-full relative z-[5]">
                        <div className="space-y-8">
                           {/* Direct Contact Card */}
-                          <div className="p-8 bg-zinc-900 border-2 border-white/5 shadow-[8px_8px_0px_#d8b97a] rounded-xl transform hover:-translate-y-1 transition-transform">
+                          <div className="p-8 bg-zinc-900/80 backdrop-blur-md border-2 border-white/5 shadow-[8px_8px_0px_#d8b97a] rounded-xl transform hover:-translate-y-1 transition-transform">
                              <div className="flex items-center gap-4 mb-4 text-[#d8b97a]">
                                 <Icons.Mail />
                                 <h4 className="text-xl font-black uppercase tracking-widest">Direct Inquiry</h4>
@@ -565,7 +596,7 @@
                                { icon: <Icons.Facebook />, label: 'Facebook', url: 'https://facebook.com/hishamabdelhamedd', color: 'hover:bg-[#1877f2]' },
                                { icon: <Icons.Tiktok />, label: 'TikTok', url: 'https://www.tiktok.com/@hisham.abdelhamed', color: 'hover:bg-zinc-700' }
                              ].map((social, i) => (
-                               <a key={i} href={social.url} target="_blank" className={`flex items-center justify-between p-6 bg-zinc-900 border border-white/10 shadow-[4px_4px_0px_#111] rounded-xl group transition-all ${social.color} hover:shadow-none hover:translate-x-1 hover:translate-y-1`}>
+                               <a key={i} href={social.url} target="_blank" className={`flex items-center justify-between p-6 bg-zinc-900/80 backdrop-blur-md border border-white/10 shadow-[4px_4px_0px_#111] rounded-xl group transition-all ${social.color} hover:shadow-none hover:translate-x-1 hover:translate-y-1`}>
                                   <div className="flex flex-col">
                                      <span className="text-[9px] font-black opacity-40 uppercase tracking-widest">Connect on</span>
                                      <span className="font-black text-lg">{social.label}</span>
