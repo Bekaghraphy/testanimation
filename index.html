@@ -209,76 +209,7 @@
                       </div>
                     </div>
                   </div>
-{/* ===== PORTFOLIO ARCHIVE (ADDED) ===== */}
-<section className="py-28 bg-black overflow-hidden">
 
-  <h2 className="text-center text-3xl font-black text-[#d8b97a] mb-16">
-    PORTFOLIO ARCHIVE
-  </h2>
-
-  <div className="overflow-hidden">
-    <div className="flex gap-10 animate-marquee">
-
-      {[
-        "https://player.vimeo.com/video/1081231929",
-        "https://player.vimeo.com/video/1093436208",
-        "https://player.vimeo.com/video/1012761186",
-        "https://player.vimeo.com/video/782962222",
-        "https://player.vimeo.com/video/1081226158",
-        "https://player.vimeo.com/video/348818970",
-        "https://player.vimeo.com/video/1137725566",
-        "https://player.vimeo.com/video/1088303838",
-        "https://player.vimeo.com/video/697540206",
-        "https://player.vimeo.com/video/348850766",
-        "https://player.vimeo.com/video/1127837184",
-        "https://player.vimeo.com/video/348850143",
-        "https://www.youtube.com/embed/n4gmpMHBUK4",
-        "https://player.vimeo.com/video/1141818722",
-        "https://www.youtube.com/embed/DqZM6chIz8c",
-        "https://player.vimeo.com/video/815712178",
-        "https://www.youtube.com/embed/6J3qrLEB6Uw",
-        "https://www.youtube.com/embed/Lb1WNNI-mJU",
-        "https://www.youtube.com/embed/k-BVul-oCNQ",
-        "https://www.youtube.com/embed/B0KC9WzoYfw",
-        "https://www.youtube.com/embed/8o3vHHhsed4",
-        "https://player.vimeo.com/video/1127838352",
-        "https://www.youtube.com/embed/sYUCtAFHbfc",
-        "https://www.youtube.com/embed/sz8RTnunR-U",
-        "https://player.vimeo.com/video/919167340",
-        "https://www.youtube.com/embed/bTyCS3wRJBc",
-        "https://www.youtube.com/embed/34fza20tlhA",
-        "https://www.youtube.com/embed/cc5rdSxI6ws"
-      ].map((url, i) => (
-        <div key={i} className="group relative">
-
-          <div className="relative w-[260px] aspect-[3/4] bg-black border-[14px] border-zinc-800 overflow-hidden">
-
-            {/* film holes */}
-            <div className="absolute left-0 top-0 h-full w-2 flex flex-col justify-between py-2">
-              {[...Array(10)].map((_,i)=><div key={i} className="w-2 h-2 bg-black"></div>)}
-            </div>
-
-            <div className="absolute right-0 top-0 h-full w-2 flex flex-col justify-between py-2">
-              {[...Array(10)].map((_,i)=><div key={i} className="w-2 h-2 bg-black"></div>)}
-            </div>
-
-            <iframe src={url} className="w-full h-full pointer-events-none"></iframe>
-
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-              <div className="bg-[#d8b97a] text-black p-4 rounded-full">
-                ▶
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      ))}
-
-    </div>
-  </div>
-
-</section>
                   {/* PREMIERE TIMELINE */}
                   <div className="premiere-panel rounded-xl overflow-hidden flex shadow-2xl border-2 border-black">
                     {/* Toolbar */}
@@ -365,31 +296,7 @@
                   ))}
                 </div>
               </section>
-{/* ===== CONTACT NEW (ADDED) ===== */}
-<section className="py-28 bg-[#080808] text-center">
 
-  <h2 className="text-5xl font-black mb-16">CONTACT</h2>
-
-  <div className="flex justify-center gap-6 mb-12">
-
-    <a href="#" className="p-4 bg-zinc-900 rounded-full hover:bg-[#d8b97a] transition">
-      <Icons.Linkedin />
-    </a>
-
-    <a href="#" className="p-4 bg-zinc-900 rounded-full hover:bg-[#d8b97a] transition">
-      <Icons.Instagram />
-    </a>
-
-    <a href="#" className="p-4 bg-zinc-900 rounded-full hover:bg-[#d8b97a] transition">
-      <Icons.Facebook />
-    </a>
-
-  </div>
-
-  <p className="text-zinc-400">+966 50 306 4408</p>
-  <p className="text-zinc-400">+20 10 10 72 3207</p>
-
-</section>
               {/* Contact */}
               <section id="contact" className="py-32 px-6 bg-[#080808]">
                 <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20">
