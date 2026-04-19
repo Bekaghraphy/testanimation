@@ -155,6 +155,30 @@
             opacity: 1;
             filter: grayscale(0) contrast(1);
         }
+
+        /* NEW: Contact Section Specific Styles */
+        .contact-grid-paper {
+            background-image: linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .sketch-font {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+        }
+        .pin-red {
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+            background: radial-gradient(circle at 30% 30%, #ff4d4d, #990000);
+            border-radius: 50%;
+        }
+        .sticky-note {
+            box-shadow: 2px 5px 15px rgba(0,0,0,0.6);
+            transform: rotate(-2deg);
+        }
+        .floating-image {
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8));
+            mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+        }
     </style>
 </head>
 <body class="ltr">
@@ -179,11 +203,13 @@
           Linkedin: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>,
           Instagram: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>,
           Facebook: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>,
+          Tiktok: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>,
           Download: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>,
           Play: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>,
           X: () => <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>,
           Selection: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#40a9ff" strokeWidth="3"><path d="M3 3l7 18 3-7 7-3-17-8z"/></svg>,
-          Razor: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2"><path d="M11 2v20M7 2l8 20"/></svg>
+          Razor: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2"><path d="M11 2v20M7 2l8 20"/></svg>,
+          Mail: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/><rect width="20" height="16" x="2" y="4" rx="2"/></svg>
         };
 
         const TIMELINE_EVENTS = [
@@ -276,8 +302,8 @@
         const SectionDivider = ({ text }) => (
           <div className="w-full h-20 bg-[#0a0a0a]/30 backdrop-blur-sm flex items-center justify-center overflow-hidden border-y border-white/5 relative">
             <div className="absolute inset-0 flex items-center opacity-5">
-               <div className="whitespace-nowrap animate-marquee font-black text-6xl">
-                  REC • REC • REC • REC • REC • REC • REC • REC • REC • REC • REC • REC
+               <div className="whitespace-nowrap animate-marquee font-black text-6xl uppercase">
+                  {text} • {text} • {text} • {text} • {text} • {text} • {text} • {text} • {text} • {text}
                </div>
             </div>
             <div className="relative z-10 flex items-center gap-4">
@@ -296,17 +322,14 @@
           return (
             <div className="min-h-screen text-white ltr">
               
-              {/* --- UPDATED NAV BAR --- */}
+              {/* --- NAV BAR --- */}
               <nav className="fixed top-0 w-full z-[100] nav-glass px-8 py-4 flex items-center">
-                {/* Left: Name */}
                 <div className="flex-1">
                   <div className="text-xl font-black tracking-tighter uppercase flex items-center gap-2">
                      <div className="w-3 h-3 bg-red-600 rounded-full animate-pulse" />
                      HESHAM <span className="text-[#d8b97a] ml-1">ABDELHAMED</span>
                   </div>
                 </div>
-
-                {/* Center: Navigation Links */}
                 <div className="absolute left-1/2 -translate-x-1/2 flex gap-8 items-center">
                    <div className="hidden md:flex gap-8 text-[10px] font-bold tracking-widest uppercase text-zinc-400">
                       <a href="#" className="hover:text-[#d8b97a] transition-colors">Home</a>
@@ -315,15 +338,12 @@
                       <a href="#contact" className="hover:text-[#d8b97a] transition-colors">Contact</a>
                    </div>
                 </div>
-
-                {/* Right Spacer for balance */}
                 <div className="flex-1 flex justify-end"></div>
               </nav>
 
               {/* Hero Section */}
               <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 bg-black/10 z-[1]" />
-                
                 <div className="relative z-10 text-center px-6">
                   <motion.h1 initial={{y: 50, opacity: 0}} animate={{y: 0, opacity: 1}} className="text-7xl md:text-[11rem] font-black leading-none uppercase mb-6">
                     STORY<br />
@@ -333,7 +353,7 @@
                     Visual Producer • Creative Brand Director
                   </p>
                   <div className="flex gap-4 justify-center">
-                    <a href="#" className="flex items-center gap-3 px-10 py-4 bg-[#d8b97a] text-black font-black uppercase tracking-widest text-[10px] rounded-full hover:bg-white transition-all shadow-[0_0_20px_rgba(216,185,122,0.3)]">
+                    <a href="Hesham-Abdelhamed-Portfolio.pdf" target="_blank" className="flex items-center gap-3 px-10 py-4 bg-[#d8b97a] text-black font-black uppercase tracking-widest text-[10px] rounded-full hover:bg-white transition-all shadow-[0_0_20px_rgba(216,185,122,0.3)]">
                       <Icons.Download /> Portfolio PDF
                     </a>
                   </div>
@@ -342,11 +362,9 @@
 
               <SectionDivider text="WORK EXPERIENCE" />
 
-              {/* Experience with TV & Premiere Timeline */}
+              {/* Experience Section */}
               <section id="experience" className="py-24 premiere-bg border-y border-white/5 relative overflow-hidden">
                 <div className="max-w-7xl mx-auto px-6 relative z-10">
-                  
-                  {/* MONITOR SECTION (TV) */}
                   <div className="grid lg:grid-cols-12 gap-10 mb-16">
                     <div className="lg:col-span-8">
                       <div className="tv-frame aspect-video p-2">
@@ -360,8 +378,6 @@
                         </div>
                       </div>
                     </div>
-                    
-                    {/* INFO PANEL */}
                     <div className="lg:col-span-4 premiere-panel p-8 rounded-xl shadow-2xl flex flex-col justify-center">
                       <div className="text-[10px] text-blue-400 font-bold mb-4 tracking-widest uppercase">Project MetaData</div>
                       <div className="space-y-4">
@@ -382,20 +398,14 @@
                       </div>
                     </div>
                   </div>
-
-                  {/* PREMIERE TIMELINE */}
                   <div className="premiere-panel rounded-xl overflow-hidden flex shadow-2xl border-2 border-black">
-                    {/* Toolbar */}
                     <div className="w-14 bg-[#2b2b2b] border-r border-black flex flex-col items-center py-6 gap-8">
                       <div className="p-2 bg-[#3d3d3d] rounded cursor-pointer shadow-lg"><Icons.Selection /></div>
                       <div className="p-2 hover:bg-[#3d3d3d] rounded cursor-pointer transition-colors"><Icons.Razor /></div>
                       <div className="w-8 h-[1px] bg-white/5" />
                       <div className="text-[12px] font-black text-zinc-600">T</div>
                     </div>
-
-                    {/* Tracks Area */}
                     <div className="flex-1 relative flex flex-col bg-[#111]">
-                      {/* Ruler */}
                       <div className="h-10 bg-[#2b2b2b] border-b border-black flex items-end px-4 relative">
                          {[...Array(11)].map((_, i) => (
                            <div key={i} className="absolute h-4 border-l border-white/20 text-[9px] text-zinc-500 pl-1.5 font-mono" style={{left: `${i*10}%`}}>
@@ -403,8 +413,6 @@
                            </div>
                          ))}
                       </div>
-
-                      {/* Interaction Layer */}
                       <div className="relative cursor-none group" 
                            onMouseMove={(e) => {
                              const rect = e.currentTarget.getBoundingClientRect();
@@ -413,13 +421,9 @@
                              const found = TIMELINE_EVENTS.find(ev => x >= ev.start && x <= ev.end);
                              if(found) setActiveEvent(found);
                            }}>
-                        
-                        {/* Playhead */}
                         <div className="playhead-line" style={{ left: `${hoverX}%` }}>
                           <div className="playhead-head" />
                         </div>
-
-                        {/* Tracks */}
                         {['V2', 'V1'].map((tName) => (
                           <div key={tName} className="flex border-b border-black">
                              <div className="track-label">{tName}</div>
@@ -433,8 +437,6 @@
                              </div>
                           </div>
                         ))}
-
-                        {/* Audio Tracks (Lower Visual) */}
                         <div className="flex border-t-4 border-black/50">
                            <div className="track-label text-blue-400">A1</div>
                            <div className="flex-1 h-10 bg-zinc-900/40 relative">
@@ -469,32 +471,111 @@
                 </div>
               </section>
 
-              {/* Contact */}
-              <section id="contact" className="py-32 px-6 bg-black/60 backdrop-blur-md">
-                <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20">
-                  <div className="space-y-12">
-                    <h2 className="text-7xl font-black uppercase tracking-tighter text-zinc-800">LET'S<br/>TALK</h2>
-                    <div className="space-y-8">
-                       <div className="p-8 bg-zinc-900/50 rounded-3xl border border-white/5 backdrop-blur-xl">
-                          <div className="text-[10px] text-[#d8b97a] font-black mb-2 uppercase tracking-widest">Phone (KSA)</div>
-                          <a href="tel:+966503064408" className="text-3xl font-black block" style={{direction: 'ltr'}}>+966 50 306 4408</a>
+              <SectionDivider text="CONTACT" />
+
+              {/* --- UPDATED CONTACT SECTION (Dark Mode & Animated One-Liner) --- */}
+              <section id="contact" className="py-24 px-6 bg-[#080808] text-white relative contact-grid-paper overflow-hidden">
+                {/* Background Text Shadow */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] select-none">
+                   <h2 className="text-[25vw] font-black tracking-tighter uppercase sketch-font">CONNECT</h2>
+                </div>
+
+                <div className="max-w-7xl mx-auto relative z-10">
+                  <div className="flex flex-col lg:flex-row gap-16 items-center">
+                    
+                    {/* Left Side: Animated Heading & Image */}
+                    <div className="flex-1 relative flex flex-col items-center lg:items-start">
+                       <div className="relative mb-12">
+                          <motion.div 
+                            initial={{ x: -100, opacity: 0 }}
+                            whileInView={{ x: 0, opacity: 1 }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
+                            className="flex overflow-hidden"
+                          >
+                            <h2 className="text-7xl md:text-[9rem] font-black leading-none sketch-font text-white uppercase tracking-tighter whitespace-nowrap">
+                              {["C","O","N","T","A","C","T"].map((char, i) => (
+                                <motion.span 
+                                  key={i} 
+                                  animate={{ y: [0, -10, 0] }} 
+                                  transition={{ repeat: Infinity, duration: 2, delay: i * 0.1 }}
+                                  className="inline-block"
+                                >
+                                  {char}
+                                </motion.span>
+                              ))}
+                            </h2>
+                          </motion.div>
+                          
+                          {/* Pins and Sticky Notes (Darkened) */}
+                          <motion.div 
+                            initial={{ x: 20, y: -20, rotate: 10, opacity: 0 }}
+                            whileInView={{ x: 0, y: 0, rotate: -5, opacity: 1 }}
+                            className="absolute -top-10 -right-10 w-32 h-32 bg-zinc-800 sticky-note p-4 text-xs font-bold text-zinc-300 flex flex-col justify-between border border-white/10"
+                          >
+                             <div className="w-4 h-4 pin-red absolute -top-2 left-1/2 -translate-x-1/2"></div>
+                             <p>Let's tell a story that lasts forever.</p>
+                             <p className="text-[8px] opacity-50 text-[#d8b97a]">#CreativeVision</p>
+                          </motion.div>
+
+                          <div className="absolute top-1/2 left-1/2 w-6 h-6 pin-red -translate-x-1/2 -translate-y-1/2 hidden md:block"></div>
                        </div>
-                       <div className="p-8 bg-zinc-900/50 rounded-3xl border border-white/5 backdrop-blur-xl">
-                          <div className="text-[10px] text-[#d8b97a] font-black mb-2 uppercase tracking-widest">Phone (EGY)</div>
-                          <a href="tel:+201010723207" className="text-3xl font-black block" style={{direction: 'ltr'}}>+20 10 10 72 3207</a>
+
+                       {/* Profile Image Integration */}
+                       <div className="relative group">
+                          <motion.div 
+                            initial={{ y: 50, opacity: 0 }}
+                            whileInView={{ y: 0, opacity: 1 }}
+                            className="relative z-10 w-64 md:w-80 overflow-hidden rounded-b-3xl"
+                          >
+                            <img src="Hesham.png" alt="Hesham Abdelhamed" className="w-full h-auto floating-image grayscale hover:grayscale-0 transition-all duration-700" />
+                          </motion.div>
+                          {/* Sketch border effect */}
+                          <div className="absolute -inset-4 border-2 border-dashed border-[#d8b97a]/30 rounded-full animate-[spin_20s_linear_infinite] opacity-50"></div>
                        </div>
                     </div>
-                  </div>
-                  <div className="flex flex-col justify-center items-center text-center">
-                     <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-[#d8b97a] mb-8 shadow-2xl relative">
-                        <img src="ME.jpg" className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                     </div>
-                     <div className="flex gap-6">
-                        <a href="https://linkedin.com/in/heshamabdelhamed" className="p-4 bg-zinc-900/80 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><Icons.Linkedin /></a>
-                        <a href="#" className="p-4 bg-zinc-900/80 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><Icons.Instagram /></a>
-                        <a href="#" className="p-4 bg-zinc-900/80 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><Icons.Facebook /></a>
-                     </div>
+
+                    {/* Right Side: Contact Details & Socials */}
+                    <div className="flex-1 w-full">
+                       <div className="space-y-8">
+                          {/* Direct Contact Card */}
+                          <div className="p-8 bg-zinc-900 border-2 border-white/5 shadow-[8px_8px_0px_#d8b97a] rounded-xl transform hover:-translate-y-1 transition-transform">
+                             <div className="flex items-center gap-4 mb-4 text-[#d8b97a]">
+                                <Icons.Mail />
+                                <h4 className="text-xl font-black uppercase tracking-widest">Direct Inquiry</h4>
+                             </div>
+                             <a href="mailto:per.hisham@gmail.com" className="text-2xl md:text-3xl font-black hover:text-[#d8b97a] transition-colors break-words underline decoration-white/10 decoration-4 underline-offset-4">per.hisham@gmail.com</a>
+                             
+                             <div className="mt-8 pt-6 border-t-2 border-white/5 flex flex-col md:flex-row gap-6">
+                                <div>
+                                   <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">KSA Office</p>
+                                   <p className="font-black text-xl">+966 50 306 4408</p>
+                                </div>
+                                <div>
+                                   <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">EGY Office</p>
+                                   <p className="font-black text-xl">+20 10 10 72 3207</p>
+                                </div>
+                             </div>
+                          </div>
+
+                          {/* Social Platforms Grid */}
+                          <div className="grid grid-cols-2 gap-4">
+                             {[
+                               { icon: <Icons.Linkedin />, label: 'LinkedIn', url: 'https://www.linkedin.com/in/hishamabdelhamed', color: 'hover:bg-[#0077b5]' },
+                               { icon: <Icons.Instagram />, label: 'Instagram', url: 'https://www.instagram.com/hisham.abdlhamed?igsh=MTZwM3VsZWd1d2hxOA%3D%3D&utm_source=qrtarget=', color: 'hover:bg-[#e1306c]' },
+                               { icon: <Icons.Facebook />, label: 'Facebook', url: 'https://facebook.com/hishamabdelhamedd', color: 'hover:bg-[#1877f2]' },
+                               { icon: <Icons.Tiktok />, label: 'TikTok', url: 'https://www.tiktok.com/@hisham.abdelhamed', color: 'hover:bg-zinc-700' }
+                             ].map((social, i) => (
+                               <a key={i} href={social.url} target="_blank" className={`flex items-center justify-between p-6 bg-zinc-900 border border-white/10 shadow-[4px_4px_0px_#111] rounded-xl group transition-all ${social.color} hover:shadow-none hover:translate-x-1 hover:translate-y-1`}>
+                                  <div className="flex flex-col">
+                                     <span className="text-[9px] font-black opacity-40 uppercase tracking-widest">Connect on</span>
+                                     <span className="font-black text-lg">{social.label}</span>
+                                  </div>
+                                  <div className="scale-125 group-hover:rotate-12 transition-transform">{social.icon}</div>
+                               </a>
+                             ))}
+                          </div>
+                       </div>
+                    </div>
                   </div>
                 </div>
               </section>
@@ -511,7 +592,7 @@
                 )}
               </AnimatePresence>
 
-              <footer className="py-12 text-center opacity-40 text-[9px] font-black tracking-[0.5em] uppercase">
+              <footer className="py-12 text-center opacity-40 text-[9px] font-black tracking-[0.5em] uppercase border-t border-white/5 bg-black">
                 Hesham Abdelhamed • Visual Storyteller • 2026
               </footer>
             </div>
