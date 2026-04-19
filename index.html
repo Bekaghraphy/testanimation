@@ -162,7 +162,7 @@
     <!-- Persistent Global Video Background (Using local 5.mp4) -->
     <div class="video-background-wrapper">
         <div class="video-container">
-            <video autoplay muted loop playsinline poster="5-poster.jpg">
+            <video autoplay muted loop playsinline>
                 <source src="5.mp4" type="video/mp4">
             </video>
         </div>
@@ -187,11 +187,84 @@
         };
 
         const TIMELINE_EVENTS = [
-          { id: 1, year: "2014 - 2018", role_en: "Multimedia Producer", company: "Gamma Rapho Agency", details_en: "Documenting pivotal moments across the Arab world.", track: "V2", color: "#5c3a91", start: 0, end: 20, video: "https://player.vimeo.com/video/348818970" },
-          { id: 2, year: "2019 - 2021", role_en: "Multimedia Producer", company: "WAYA Media", details_en: "Producing inspiring stories about startups.", track: "V1", color: "#2d5a27", start: 20, end: 40, video: "https://player.vimeo.com/video/1093436208" },
-          { id: 3, year: "2018 - 2022", role_en: "Multimedia Producer", company: "Al Ghad TV", details_en: "Produced over 40 documentary films.", track: "V2", color: "#2b4c7e", start: 40, end: 65, video: "https://player.vimeo.com/video/782962222" },
-          { id: 4, year: "2022 - 2023", role_en: "Multimedia Manager", company: "Baheya Foundation", details_en: "Leading the photography and editing department.", track: "V1", color: "#8a2b53", start: 65, end: 85, video: "https://player.vimeo.com/video/1081226158" },
-          { id: 5, year: "2024 - Present", role_en: "Multimedia Producer", company: "FLOW Medical", details_en: "Leading production for FLOW Riyadh.", track: "V2", color: "#7e5a2b", start: 85, end: 100, video: "https://player.vimeo.com/video/1081231929" }
+          { 
+            id: 1, 
+            year: "Jan 2014 — Jan 2018", 
+            role_en: "Multimedia Producer", 
+            company: "Gamma Rapho Francias Agency", 
+            details_en: "Produced content documenting pivotal moments across the Arab world during conflict and social transformation. Supplied footage to Al Arabiya, BBC, DW, Reuters, AP, and Al Jazeera.",
+            location: "France · Lebanon · Egypt · Syria · Sudan · Libya",
+            track: "V2", 
+            color: "#5c3a91", 
+            start: 0, 
+            end: 16, 
+            video: "https://player.vimeo.com/video/348818970" 
+          },
+          { 
+            id: 2, 
+            year: "Jan 2018 — Jan 2022", 
+            role_en: "Multimedia Producer", 
+            company: "Media Vision (Al Ghad TV)", 
+            details_en: "Produced 40+ documentary films across 5 Arab countries. Series include Habr Ala Al-Raseef (21 films) and Muna' Min Al-Tadawol (19 films).",
+            location: "Egypt · Lebanon · Tunisia · Morocco · Jordan",
+            track: "V1", 
+            color: "#2b4c7e", 
+            start: 16, 
+            end: 33, 
+            video: "https://player.vimeo.com/video/782962222" 
+          },
+          { 
+            id: 3, 
+            year: "Jan 2019 — Jan 2021", 
+            role_en: "Multimedia Producer", 
+            company: "WAYA Media", 
+            details_en: "Produced inspiring startup and entrepreneurship stories for a leading Egyptian media platform, capturing the journeys of emerging businesses.",
+            location: "Egypt",
+            track: "V2", 
+            color: "#2d5a27", 
+            start: 33, 
+            end: 50, 
+            video: "https://player.vimeo.com/video/1093436208" 
+          },
+          { 
+            id: 4, 
+            year: "Jan 2022 — Jan 2023", 
+            role_en: "Multimedia Manager", 
+            company: "Baheya Foundation", 
+            details_en: "Led the filming and editing department for Egypt's leading breast cancer charity. Crafted respectful documentary portraits of women facing illness.",
+            location: "Egypt",
+            track: "V1", 
+            color: "#8a2b53", 
+            start: 50, 
+            end: 66, 
+            video: "https://player.vimeo.com/video/1081226158" 
+          },
+          { 
+            id: 5, 
+            year: "Jan 2023 — Jan 2024", 
+            role_en: "Multimedia Producer", 
+            company: "Freelance — International Media", 
+            details_en: "Delivered report, sports, and documentary projects for BBC, Deutsche Welle, France Télévisions, and PureMinds. Produced content for Al Arabiya and Now.",
+            location: "Egypt · Saudi Arabia",
+            track: "V2", 
+            color: "#4a4a4a", 
+            start: 66, 
+            end: 83, 
+            video: "https://player.vimeo.com/video/1088303838" 
+          },
+          { 
+            id: 6, 
+            year: "Jan 2024 — Present", 
+            role_en: "Multimedia Producer", 
+            company: "FLOW Medical Solutions (HMG)", 
+            details_en: "Leading production and post-production for Saudi Arabia's leading medical solutions company. Delivering 8+ brand-driven projects monthly.",
+            location: "Riyadh, Saudi Arabia",
+            track: "V1", 
+            color: "#d8b97a", 
+            start: 83, 
+            end: 100, 
+            video: "https://player.vimeo.com/video/1081231929" 
+          }
         ];
 
         const VIDEO_LINKS = [
@@ -216,27 +289,35 @@
         );
 
         function App() {
-          const [hoverX, setHoverX] = useState(88);
-          const [activeEvent, setActiveEvent] = useState(TIMELINE_EVENTS[4]);
+          const [hoverX, setHoverX] = useState(90);
+          const [activeEvent, setActiveEvent] = useState(TIMELINE_EVENTS[5]);
           const [selectedVideo, setSelectedVideo] = useState(null);
 
           return (
             <div className="min-h-screen text-white ltr">
               
-              {/* --- NAV BAR --- */}
-              <nav className="fixed top-0 w-full z-[100] nav-glass px-8 py-4 flex justify-between items-center">
-                <div className="text-xl font-black tracking-tighter uppercase flex items-center gap-2">
-                   <div className="w-3 h-3 bg-red-600 rounded-full animate-pulse" />
-                   HESHAM <span className="text-[#d8b97a]">ABDELHAMED</span>
+              {/* --- UPDATED NAV BAR --- */}
+              <nav className="fixed top-0 w-full z-[100] nav-glass px-8 py-4 flex items-center">
+                {/* Left: Name */}
+                <div className="flex-1">
+                  <div className="text-xl font-black tracking-tighter uppercase flex items-center gap-2">
+                     <div className="w-3 h-3 bg-red-600 rounded-full animate-pulse" />
+                     HESHAM <span className="text-[#d8b97a] ml-1">ABDELHAMED</span>
+                  </div>
                 </div>
-                <div className="flex gap-8 items-center">
-                   <div className="hidden md:flex gap-6 text-[10px] font-bold tracking-widest uppercase text-zinc-400">
-                      <a href="#" className="hover:text-[#d8b97a]">Home</a>
-                      <a href="#experience" className="hover:text-[#d8b97a]">Experience</a>
-                      <a href="#work" className="hover:text-[#d8b97a]">Portfolio</a>
-                      <a href="#contact" className="hover:text-[#d8b97a]">Contact</a>
+
+                {/* Center: Navigation Links */}
+                <div className="absolute left-1/2 -translate-x-1/2 flex gap-8 items-center">
+                   <div className="hidden md:flex gap-8 text-[10px] font-bold tracking-widest uppercase text-zinc-400">
+                      <a href="#" className="hover:text-[#d8b97a] transition-colors">Home</a>
+                      <a href="#experience" className="hover:text-[#d8b97a] transition-colors">Experience</a>
+                      <a href="#work" className="hover:text-[#d8b97a] transition-colors">Portfolio</a>
+                      <a href="#contact" className="hover:text-[#d8b97a] transition-colors">Contact</a>
                    </div>
                 </div>
+
+                {/* Right Spacer for balance */}
+                <div className="flex-1 flex justify-end"></div>
               </nav>
 
               {/* Hero Section */}
@@ -273,26 +354,30 @@
                           <div className="scanline" />
                           <div className="absolute top-4 left-6 z-20 flex items-center gap-2">
                              <div className="w-2 h-2 bg-red-600 rounded-full animate-pulse" />
-                             <span className="text-[10px] font-mono font-bold text-red-600">REC 00:12:44:02</span>
+                             <span className="text-[10px] font-mono font-bold text-red-600">SCRUBBING TIMELINE...</span>
                           </div>
-                          <iframe src={`${activeEvent.video}?background=1&autoplay=1&loop=1&muted=1`} className="w-full h-full object-cover scale-110 grayscale-[0.3]" frameBorder="0" />
+                          <iframe key={activeEvent.id} src={`${activeEvent.video}?background=1&autoplay=1&loop=1&muted=1`} className="w-full h-full object-cover scale-110 grayscale-[0.2]" frameBorder="0" />
                         </div>
                       </div>
                     </div>
                     
                     {/* INFO PANEL */}
                     <div className="lg:col-span-4 premiere-panel p-8 rounded-xl shadow-2xl flex flex-col justify-center">
-                      <div className="text-[10px] text-blue-400 font-bold mb-6 tracking-widest uppercase">Clip Information</div>
-                      <div className="space-y-6">
-                        <h3 className="text-4xl font-black uppercase leading-tight">{activeEvent.role_en}</h3>
-                        <div className="flex items-center gap-3">
-                           <div className="h-[2px] w-8 bg-[#d8b97a]" />
+                      <div className="text-[10px] text-blue-400 font-bold mb-4 tracking-widest uppercase">Project MetaData</div>
+                      <div className="space-y-4">
+                        <h3 className="text-3xl font-black uppercase leading-tight">{activeEvent.role_en}</h3>
+                        <div className="flex flex-col gap-1">
                            <p className="text-xl font-bold text-[#d8b97a]">{activeEvent.company}</p>
+                           <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">{activeEvent.location}</p>
                         </div>
-                        <p className="text-sm text-zinc-400 leading-relaxed italic">{activeEvent.details_en}</p>
-                        <div className="pt-8 border-t border-white/10 grid grid-cols-2 gap-4 text-[10px] font-mono text-zinc-500 uppercase">
-                          <div>Time: {activeEvent.year}</div>
-                          <div>Status: Mastered</div>
+                        <p className="text-sm text-zinc-400 leading-relaxed italic border-l-2 border-[#d8b97a]/30 pl-4">{activeEvent.details_en}</p>
+                        <div className="pt-6 border-t border-white/10 grid grid-cols-1 gap-2 text-[10px] font-mono text-zinc-500 uppercase">
+                          <div>Date: {activeEvent.year}</div>
+                          <div className="flex gap-2">
+                            <span className="px-2 py-0.5 bg-zinc-800 rounded">4K</span>
+                            <span className="px-2 py-0.5 bg-zinc-800 rounded">HDR</span>
+                            <span className="px-2 py-0.5 bg-[#d8b97a]/20 text-[#d8b97a] rounded">MASTER</span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -340,9 +425,9 @@
                              <div className="track-label">{tName}</div>
                              <div className="flex-1 h-14 relative bg-[#0d0d0d] overflow-hidden">
                                {TIMELINE_EVENTS.filter(e => e.track === tName).map(ev => (
-                                 <div key={ev.id} className={`absolute h-[70%] top-[15%] rounded border-l-4 border-white/20 flex items-center px-4 text-[9px] font-black tracking-tighter uppercase transition-all duration-300 ${activeEvent.id === ev.id ? 'brightness-125 scale-y-105 z-10' : 'opacity-40 grayscale'}`}
+                                 <div key={ev.id} className={`absolute h-[70%] top-[15%] rounded border-l-4 border-white/20 flex items-center px-4 text-[9px] font-black tracking-tighter uppercase transition-all duration-300 ${activeEvent.id === ev.id ? 'brightness-125 scale-y-105 z-10' : 'opacity-30 grayscale'}`}
                                       style={{ left: `${ev.start}%`, width: `${ev.end-ev.start}%`, backgroundColor: ev.color }}>
-                                   {ev.company}
+                                   {ev.company.split(' ')[0]}
                                  </div>
                                ))}
                              </div>
@@ -406,7 +491,7 @@
                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                      </div>
                      <div className="flex gap-6">
-                        <a href="#" className="p-4 bg-zinc-900/80 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><Icons.Linkedin /></a>
+                        <a href="https://linkedin.com/in/heshamabdelhamed" className="p-4 bg-zinc-900/80 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><Icons.Linkedin /></a>
                         <a href="#" className="p-4 bg-zinc-900/80 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><Icons.Instagram /></a>
                         <a href="#" className="p-4 bg-zinc-900/80 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><Icons.Facebook /></a>
                      </div>
