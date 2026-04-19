@@ -270,4 +270,276 @@
         window.onload = createStrip;
     </script>
 </body>
+</html><!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hesham Abdelhamed | Visual Storyteller</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background-color: #050505;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        /* Grain Effect */
+        .grain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://grainy-gradients.vercel.app/noise.svg');
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Hero Background */
+        .hero-bg {
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(5,5,5,1)), url('Ract.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* Film Strip Animations */
+        @keyframes scroll-up {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
+        }
+        @keyframes scroll-down {
+            0% { transform: translateY(-50%); }
+            100% { transform: translateY(0); }
+        }
+
+        .film-column-up { animation: scroll-up 45s linear infinite; }
+        .film-column-down { animation: scroll-down 40s linear infinite; }
+        .film-column:hover { animation-play-state: paused; }
+
+        /* White Film Strip Effect - التعديل المطلوب */
+        .film-frame {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05); /* ابيض خفيف جداً */
+            border-left: 25px solid rgba(255, 255, 255, 0.08);
+            border-right: 25px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .film-frame:hover {
+            background: rgba(255, 255, 255, 0.15); /* يتفاعل مع الماوس ويصبح افتح */
+            border-color: rgba(216, 185, 122, 0.4); /* تلميح للون الذهبي عند اللمس */
+            transform: scale(1.02);
+            z-index: 50;
+        }
+
+        /* Sprocket Holes (ثقوب الفيلم) */
+        .sprocket {
+            width: 10px;
+            height: 14px;
+            background: #050505;
+            border-radius: 1px;
+            margin: 8px 0;
+        }
+
+        /* Modal Player */
+        #videoModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.97);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(15px);
+        }
+        
+        .rtl { direction: rtl; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #d8b97a; }
+    </style>
+</head>
+<body>
+
+    <div class="grain"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-[1000] px-6 md:px-12 py-6 flex justify-between items-center bg-gradient-to-b from-black/90 to-transparent">
+        <div class="text-xl font-black tracking-tighter uppercase italic">
+            HESHAM <span class="text-[#d8b97a]">DIGITAL</span>
+        </div>
+        <div class="hidden md:flex gap-10 text-[10px] font-black uppercase tracking-[0.4em]">
+            <a href="#home" class="hover:text-[#d8b97a] transition-colors">Home</a>
+            <a href="#work" class="hover:text-[#d8b97a] transition-colors">Archive</a>
+            <a href="#contact" class="hover:text-[#d8b97a] transition-colors">Contact</a>
+        </div>
+        <button onclick="toggleLang()" id="langBtn" class="text-[10px] font-black border border-[#d8b97a] px-3 py-1 rounded text-[#d8b97a] hover:bg-[#d8b97a] hover:text-black transition-all">العربية</button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-bg h-screen flex flex-col items-center justify-center relative overflow-hidden">
+        <div class="text-center z-10 px-6">
+            <h1 id="heroTitle" class="text-5xl md:text-[8vw] font-black leading-none uppercase tracking-tighter mb-4">
+                HESHAM<br><span class="text-[#d8b97a] italic">ABDELHAMED</span>
+            </h1>
+            <p id="heroSub" class="text-[10px] md:text-sm font-bold tracking-[0.6em] uppercase opacity-60">Visual Storyteller • Multimedia Producer</p>
+        </div>
+        
+        <!-- Stats -->
+        <div class="absolute bottom-16 grid grid-cols-3 gap-8 md:gap-24 text-center z-10">
+            <div><div class="text-3xl font-black text-[#d8b97a]">12+</div><div class="text-[8px] uppercase tracking-widest opacity-40">Years</div></div>
+            <div><div class="text-3xl font-black text-[#d8b97a]">40+</div><div class="text-[8px] uppercase tracking-widest opacity-40">Films</div></div>
+            <div><div class="text-3xl font-black text-[#d8b97a]">10+</div><div class="text-[8px] uppercase tracking-widest opacity-40">Countries</div></div>
+        </div>
+    </section>
+
+    <!-- Visual Archive (Film Strip Section) -->
+    <section id="work" class="py-32 bg-[#050505] relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 mb-20 relative z-50">
+            <h2 id="workTitle" class="text-6xl md:text-9xl font-black uppercase tracking-tighter text-white/5 absolute -top-10 left-0">ARCHIVE</h2>
+            <p class="text-sm font-bold tracking-[0.5em] uppercase text-[#d8b97a] relative z-10">Selected Works</p>
+        </div>
+
+        <div class="flex justify-center gap-6 md:gap-12 h-[850px] overflow-hidden relative">
+            <!-- Shadows for Depth -->
+            <div class="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#050505] to-transparent z-40"></div>
+            <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#050505] to-transparent z-40"></div>
+
+            <!-- Column 1 -->
+            <div class="film-column film-column-up flex flex-col" id="col1"></div>
+            <!-- Column 2 -->
+            <div class="film-column film-column-down flex flex-col" id="col2"></div>
+            <!-- Column 3 (Desktop Only) -->
+            <div class="film-column film-column-up hidden lg:flex flex-col" id="col3"></div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-40 bg-black flex flex-col items-center justify-center text-center px-6 border-t border-white/5">
+        <h2 class="text-6xl md:text-8xl font-black mb-16 uppercase italic tracking-tighter">LET'S <span class="text-[#d8b97a]">WORK</span></h2>
+        <div class="flex flex-col md:flex-row gap-8 items-center">
+            <a href="tel:+966503064408" class="text-2xl font-bold tracking-widest hover:text-[#d8b97a] transition-all">+966 50 306 4408</a>
+            <span class="hidden md:block opacity-20">|</span>
+            <a href="mailto:per.hisham@gmail.com" class="text-2xl font-bold tracking-widest hover:text-[#d8b97a] transition-all">per.hisham@gmail.com</a>
+        </div>
+        <div class="mt-20 flex gap-8">
+            <a href="#" class="p-4 bg-zinc-900 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><i data-lucide="linkedin"></i></a>
+            <a href="#" class="p-4 bg-zinc-900 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><i data-lucide="instagram"></i></a>
+            <a href="#" class="p-4 bg-zinc-900 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><i data-lucide="mail"></i></a>
+        </div>
+    </section>
+
+    <!-- Video Player Modal -->
+    <div id="videoModal" onclick="closeVideo()">
+        <button class="absolute top-8 right-8 text-white/50 hover:text-white transition-colors"><i data-lucide="x" size="40"></i></button>
+        <div class="w-[90%] max-w-5xl aspect-video bg-black shadow-2xl overflow-hidden rounded-2xl border border-white/10" onclick="event.stopPropagation()">
+            <iframe id="videoIframe" src="" class="w-full h-full" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const videoList = [
+            "1081231929", "1093436208", "1012761186", "782962222", 
+            "1081226158", "348818970", "1137725566", "1088303838", 
+            "697540206", "348850766", "1127837184", "348850143"
+        ];
+
+        function createStrip() {
+            const cols = [
+                document.getElementById('col1'),
+                document.getElementById('col2'),
+                document.getElementById('col3')
+            ];
+
+            const repeatedList = [...videoList, ...videoList, ...videoList];
+
+            repeatedList.forEach((id, index) => {
+                const targetCol = cols[index % cols.length];
+                
+                const frame = document.createElement('div');
+                frame.className = 'film-frame w-64 md:w-80 aspect-[4/5] flex items-center justify-center p-2 group';
+                frame.onclick = () => openVideo(id);
+
+                // Sprocket Holes
+                const leftSprockets = document.createElement('div');
+                leftSprockets.className = 'absolute left-[-18px] top-0 bottom-0 flex flex-col justify-around';
+                for(let i=0; i<8; i++) leftSprockets.innerHTML += '<div class="sprocket"></div>';
+                
+                const rightSprockets = document.createElement('div');
+                rightSprockets.className = 'absolute right-[-18px] top-0 bottom-0 flex flex-col justify-around';
+                for(let i=0; i<8; i++) rightSprockets.innerHTML += '<div class="sprocket"></div>';
+
+                frame.appendChild(leftSprockets);
+                frame.appendChild(rightSprockets);
+
+                // Video Thumbnail
+                frame.innerHTML += `
+                    <div class="w-full h-full overflow-hidden bg-black border-y border-white/5 relative">
+                        <img src="https://vumbnail.com/${id}.jpg" class="w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700">
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-transparent transition-colors">
+                            <i data-lucide="play" class="text-white opacity-0 group-hover:opacity-100 scale-125 transition-all duration-300"></i>
+                        </div>
+                    </div>
+                `;
+
+                targetCol.appendChild(frame);
+            });
+            lucide.createIcons();
+        }
+
+        function openVideo(id) {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoIframe');
+            iframe.src = `https://player.vimeo.com/video/${id}?autoplay=1`;
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVideo() {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoIframe');
+            iframe.src = '';
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        let currentLang = 'EN';
+        function toggleLang() {
+            currentLang = currentLang === 'EN' ? 'AR' : 'EN';
+            const btn = document.getElementById('langBtn');
+            const title = document.getElementById('heroTitle');
+            const sub = document.getElementById('heroSub');
+            const work = document.getElementById('workTitle');
+
+            if (currentLang === 'AR') {
+                document.body.classList.add('rtl');
+                btn.innerText = 'ENGLISH';
+                title.innerHTML = 'هشام<br><span class="text-[#d8b97a] italic">عبد الحميد</span>';
+                sub.innerText = 'راوي قصص بصرية • منتج وسائط متعددة';
+                work.innerText = 'الأرشيف';
+            } else {
+                document.body.classList.remove('rtl');
+                btn.innerText = 'العربية';
+                title.innerHTML = 'HESHAM<br><span class="text-[#d8b97a] italic">ABDELHAMED</span>';
+                sub.innerText = 'Visual Storyteller • Multimedia Producer';
+                work.innerText = 'ARCHIVE';
+            }
+        }
+
+        window.onload = createStrip;
+    </script>
+</body>
 </html>
