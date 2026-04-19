@@ -1,545 +1,352 @@
 <!DOCTYPE html>
-<html lang="ar" dir="ltr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hesham Abdelhamed | Visual Storyteller</title>
+    <title>Hesham Abdelhamed | Portfolio</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- React & Libraries -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+
     <style>
-        body {
-            background-color: #050505;
-            color: white;
-            font-family: 'Montserrat', sans-serif;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
+        body { font-family: 'Montserrat', sans-serif; background-color: #050505; color: white; overflow-x: hidden; }
+        .bg-hero { 
+            background-image: url('Ract.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed; 
+            animation: bg-pulse 12s infinite; 
         }
+        @keyframes bg-pulse { 0%, 100% { filter: brightness(0.2) scale(1); } 50% { filter: brightness(0.3) scale(1.05); } }
         
-        /* Grain Effect */
-        .grain {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://grainy-gradients.vercel.app/noise.svg');
-            opacity: 0.04;
-            pointer-events: none;
-            z-index: 9999;
-        }
-
-        /* Hero Background */
-        .hero-bg {
-            background-image: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(5,5,5,1)), url('Ract.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
-
-        /* Film Strip Animations */
-        @keyframes scroll-up {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-50%); }
-        }
-        @keyframes scroll-down {
-            0% { transform: translateY(-50%); }
-            100% { transform: translateY(0); }
-        }
-
-        .film-column-up { animation: scroll-up 45s linear infinite; }
-        .film-column-down { animation: scroll-down 40s linear infinite; }
-        .film-column:hover { animation-play-state: paused; }
-
-        /* White Film Strip Effect - التعديل المطلوب */
-        .film-frame {
-            position: relative;
-            background: rgba(255, 255, 255, 0.05); /* ابيض خفيف جداً */
-            border-left: 25px solid rgba(255, 255, 255, 0.08);
-            border-right: 25px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-
-        .film-frame:hover {
-            background: rgba(255, 255, 255, 0.15); /* يتفاعل مع الماوس ويصبح افتح */
-            border-color: rgba(216, 185, 122, 0.4); /* تلميح للون الذهبي عند اللمس */
-            transform: scale(1.02);
-            z-index: 50;
-        }
-
-        /* Sprocket Holes (ثقوب الفيلم) */
-        .sprocket {
-            width: 10px;
-            height: 14px;
-            background: #050505;
-            border-radius: 1px;
-            margin: 8px 0;
-        }
-
-        /* Modal Player */
-        #videoModal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.97);
-            z-index: 10000;
-            justify-content: center;
-            align-items: center;
+        /* Nav Bar Glassmorphism */
+        .nav-glass {
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        /* TV Frame Styling */
+        .tv-frame {
+            border: 18px solid #222;
+            border-bottom-width: 35px;
+            border-radius: 45px;
+            background: #111;
+            position: relative;
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.8), inset 0 0 40px rgba(0,0,0,1);
+        }
+        .tv-screen-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #000;
+        }
+        .scanline { 
+            width: 100%; 
+            height: 4px; 
+            background: rgba(255, 255, 255, 0.05); 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            pointer-events: none;
+            animation: scan 6s linear infinite; 
+            z-index: 10;
+        }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+        /* Premiere Timeline */
+        .premiere-bg { background-color: #1a1a1a; }
+        .premiere-panel { background-color: #232323; border: 1px solid #111; }
+        .track-label { width: 55px; background: #353535; border-right: 2px solid #111; font-size: 9px; font-weight: 800; color: #888; display: flex; align-items: center; justify-content: center; text-transform: uppercase; }
+        .playhead-line { width: 1px; height: 100%; background: #40a9ff; position: absolute; top: 0; pointer-events: none; z-index: 60; box-shadow: 0 0 10px rgba(64, 169, 255, 0.5); }
+        .playhead-head { width: 12px; height: 16px; background: #40a9ff; clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%); position: absolute; top: 0; transform: translateX(-50%); }
+
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .animate-marquee { display: inline-block; animation: marquee 20s linear infinite; }
         
         .rtl { direction: rtl; }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #050505; }
-        ::-webkit-scrollbar-thumb { background: #d8b97a; }
+        .ltr { direction: ltr; }
     </style>
 </head>
 <body>
+    <div id="root"></div>
 
-    <div class="grain"></div>
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        const { motion, AnimatePresence } = window.Motion;
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-[1000] px-6 md:px-12 py-6 flex justify-between items-center bg-gradient-to-b from-black/90 to-transparent">
-        <div class="text-xl font-black tracking-tighter uppercase italic">
-            HESHAM <span class="text-[#d8b97a]">DIGITAL</span>
-        </div>
-        <div class="hidden md:flex gap-10 text-[10px] font-black uppercase tracking-[0.4em]">
-            <a href="#home" class="hover:text-[#d8b97a] transition-colors">Home</a>
-            <a href="#work" class="hover:text-[#d8b97a] transition-colors">Archive</a>
-            <a href="#contact" class="hover:text-[#d8b97a] transition-colors">Contact</a>
-        </div>
-        <button onclick="toggleLang()" id="langBtn" class="text-[10px] font-black border border-[#d8b97a] px-3 py-1 rounded text-[#d8b97a] hover:bg-[#d8b97a] hover:text-black transition-all">العربية</button>
-    </nav>
+        const Icons = {
+          Linkedin: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>,
+          Instagram: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>,
+          Facebook: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>,
+          Download: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>,
+          Play: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>,
+          X: () => <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>,
+          Selection: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#40a9ff" strokeWidth="3"><path d="M3 3l7 18 3-7 7-3-17-8z"/></svg>,
+          Razor: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2"><path d="M11 2v20M7 2l8 20"/></svg>
+        };
 
-    <!-- Hero Section -->
-    <section id="home" class="hero-bg h-screen flex flex-col items-center justify-center relative overflow-hidden">
-        <div class="text-center z-10 px-6">
-            <h1 id="heroTitle" class="text-5xl md:text-[8vw] font-black leading-none uppercase tracking-tighter mb-4">
-                HESHAM<br><span class="text-[#d8b97a] italic">ABDELHAMED</span>
-            </h1>
-            <p id="heroSub" class="text-[10px] md:text-sm font-bold tracking-[0.6em] uppercase opacity-60">Visual Storyteller • Multimedia Producer</p>
-        </div>
-        
-        <!-- Stats -->
-        <div class="absolute bottom-16 grid grid-cols-3 gap-8 md:gap-24 text-center z-10">
-            <div><div class="text-3xl font-black text-[#d8b97a]">12+</div><div class="text-[8px] uppercase tracking-widest opacity-40">Years</div></div>
-            <div><div class="text-3xl font-black text-[#d8b97a]">40+</div><div class="text-[8px] uppercase tracking-widest opacity-40">Films</div></div>
-            <div><div class="text-3xl font-black text-[#d8b97a]">10+</div><div class="text-[8px] uppercase tracking-widest opacity-40">Countries</div></div>
-        </div>
-    </section>
-
-    <!-- Visual Archive (Film Strip Section) -->
-    <section id="work" class="py-32 bg-[#050505] relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-6 mb-20 relative z-50">
-            <h2 id="workTitle" class="text-6xl md:text-9xl font-black uppercase tracking-tighter text-white/5 absolute -top-10 left-0">ARCHIVE</h2>
-            <p class="text-sm font-bold tracking-[0.5em] uppercase text-[#d8b97a] relative z-10">Selected Works</p>
-        </div>
-
-        <div class="flex justify-center gap-6 md:gap-12 h-[850px] overflow-hidden relative">
-            <!-- Shadows for Depth -->
-            <div class="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#050505] to-transparent z-40"></div>
-            <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#050505] to-transparent z-40"></div>
-
-            <!-- Column 1 -->
-            <div class="film-column film-column-up flex flex-col" id="col1"></div>
-            <!-- Column 2 -->
-            <div class="film-column film-column-down flex flex-col" id="col2"></div>
-            <!-- Column 3 (Desktop Only) -->
-            <div class="film-column film-column-up hidden lg:flex flex-col" id="col3"></div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-40 bg-black flex flex-col items-center justify-center text-center px-6 border-t border-white/5">
-        <h2 class="text-6xl md:text-8xl font-black mb-16 uppercase italic tracking-tighter">LET'S <span class="text-[#d8b97a]">WORK</span></h2>
-        <div class="flex flex-col md:flex-row gap-8 items-center">
-            <a href="tel:+966503064408" class="text-2xl font-bold tracking-widest hover:text-[#d8b97a] transition-all">+966 50 306 4408</a>
-            <span class="hidden md:block opacity-20">|</span>
-            <a href="mailto:per.hisham@gmail.com" class="text-2xl font-bold tracking-widest hover:text-[#d8b97a] transition-all">per.hisham@gmail.com</a>
-        </div>
-        <div class="mt-20 flex gap-8">
-            <a href="#" class="p-4 bg-zinc-900 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><i data-lucide="linkedin"></i></a>
-            <a href="#" class="p-4 bg-zinc-900 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><i data-lucide="instagram"></i></a>
-            <a href="#" class="p-4 bg-zinc-900 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><i data-lucide="mail"></i></a>
-        </div>
-    </section>
-
-    <!-- Video Player Modal -->
-    <div id="videoModal" onclick="closeVideo()">
-        <button class="absolute top-8 right-8 text-white/50 hover:text-white transition-colors"><i data-lucide="x" size="40"></i></button>
-        <div class="w-[90%] max-w-5xl aspect-video bg-black shadow-2xl overflow-hidden rounded-2xl border border-white/10" onclick="event.stopPropagation()">
-            <iframe id="videoIframe" src="" class="w-full h-full" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <script>
-        lucide.createIcons();
-
-        const videoList = [
-            "1081231929", "1093436208", "1012761186", "782962222", 
-            "1081226158", "348818970", "1137725566", "1088303838", 
-            "697540206", "348850766", "1127837184", "348850143"
+        const TIMELINE_EVENTS = [
+          { id: 1, year: "2014 - 2018", role_en: "Multimedia Producer", role_ar: "منتج مالتي ميديا", company: "Gamma Rapho Agency", details_ar: "توثيق اللحظات المفصلية في العالم العربي.", track: "V2", color: "#5c3a91", start: 0, end: 20, video: "https://player.vimeo.com/video/348818970" },
+          { id: 2, year: "2019 - 2021", role_en: "Multimedia Producer", role_ar: "منتج مالتي ميديا", company: "WAYA Media", details_ar: "إنتاج قصص ملهمة عن الشركات الناشئة.", track: "V1", color: "#2d5a27", start: 20, end: 40, video: "https://player.vimeo.com/video/1093436208" },
+          { id: 3, year: "2018 - 2022", role_en: "Multimedia Producer", role_ar: "منتج ميديا", company: "Al Ghad TV", details_ar: "إنتاج أكثر من 40 فيلما وثائقيا.", track: "V2", color: "#2b4c7e", start: 40, end: 65, video: "https://player.vimeo.com/video/782962222" },
+          { id: 4, year: "2022 - 2023", role_en: "Multimedia Manager", role_ar: "مدير مالتي ميديا", company: "Baheya Foundation", details_ar: "قيادة قسم التصوير والمونتاج.", track: "V1", color: "#8a2b53", start: 65, end: 85, video: "https://player.vimeo.com/video/1081226158" },
+          { id: 5, year: "2024 - Present", role_en: "Multimedia Producer", role_ar: "منتج ميديا", company: "FLOW Medical", details_ar: "قيادة الإنتاج لشركة FLOW الرياض.", track: "V2", color: "#7e5a2b", start: 85, end: 100, video: "https://player.vimeo.com/video/1081231929" }
         ];
 
-        function createStrip() {
-            const cols = [
-                document.getElementById('col1'),
-                document.getElementById('col2'),
-                document.getElementById('col3')
-            ];
-
-            const repeatedList = [...videoList, ...videoList, ...videoList];
-
-            repeatedList.forEach((id, index) => {
-                const targetCol = cols[index % cols.length];
-                
-                const frame = document.createElement('div');
-                frame.className = 'film-frame w-64 md:w-80 aspect-[4/5] flex items-center justify-center p-2 group';
-                frame.onclick = () => openVideo(id);
-
-                // Sprocket Holes
-                const leftSprockets = document.createElement('div');
-                leftSprockets.className = 'absolute left-[-18px] top-0 bottom-0 flex flex-col justify-around';
-                for(let i=0; i<8; i++) leftSprockets.innerHTML += '<div class="sprocket"></div>';
-                
-                const rightSprockets = document.createElement('div');
-                rightSprockets.className = 'absolute right-[-18px] top-0 bottom-0 flex flex-col justify-around';
-                for(let i=0; i<8; i++) rightSprockets.innerHTML += '<div class="sprocket"></div>';
-
-                frame.appendChild(leftSprockets);
-                frame.appendChild(rightSprockets);
-
-                // Video Thumbnail
-                frame.innerHTML += `
-                    <div class="w-full h-full overflow-hidden bg-black border-y border-white/5 relative">
-                        <img src="https://vumbnail.com/${id}.jpg" class="w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-transparent transition-colors">
-                            <i data-lucide="play" class="text-white opacity-0 group-hover:opacity-100 scale-125 transition-all duration-300"></i>
-                        </div>
-                    </div>
-                `;
-
-                targetCol.appendChild(frame);
-            });
-            lucide.createIcons();
-        }
-
-        function openVideo(id) {
-            const modal = document.getElementById('videoModal');
-            const iframe = document.getElementById('videoIframe');
-            iframe.src = `https://player.vimeo.com/video/${id}?autoplay=1`;
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeVideo() {
-            const modal = document.getElementById('videoModal');
-            const iframe = document.getElementById('videoIframe');
-            iframe.src = '';
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        let currentLang = 'EN';
-        function toggleLang() {
-            currentLang = currentLang === 'EN' ? 'AR' : 'EN';
-            const btn = document.getElementById('langBtn');
-            const title = document.getElementById('heroTitle');
-            const sub = document.getElementById('heroSub');
-            const work = document.getElementById('workTitle');
-
-            if (currentLang === 'AR') {
-                document.body.classList.add('rtl');
-                btn.innerText = 'ENGLISH';
-                title.innerHTML = 'هشام<br><span class="text-[#d8b97a] italic">عبد الحميد</span>';
-                sub.innerText = 'راوي قصص بصرية • منتج وسائط متعددة';
-                work.innerText = 'الأرشيف';
-            } else {
-                document.body.classList.remove('rtl');
-                btn.innerText = 'العربية';
-                title.innerHTML = 'HESHAM<br><span class="text-[#d8b97a] italic">ABDELHAMED</span>';
-                sub.innerText = 'Visual Storyteller • Multimedia Producer';
-                work.innerText = 'ARCHIVE';
-            }
-        }
-
-        window.onload = createStrip;
-    </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="ar" dir="ltr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hesham Abdelhamed | Visual Storyteller</title>
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        body {
-            background-color: #050505;
-            color: white;
-            font-family: 'Montserrat', sans-serif;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
-        
-        /* Grain Effect */
-        .grain {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://grainy-gradients.vercel.app/noise.svg');
-            opacity: 0.04;
-            pointer-events: none;
-            z-index: 9999;
-        }
-
-        /* Hero Background */
-        .hero-bg {
-            background-image: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(5,5,5,1)), url('Ract.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
-
-        /* Film Strip Animations */
-        @keyframes scroll-up {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-50%); }
-        }
-        @keyframes scroll-down {
-            0% { transform: translateY(-50%); }
-            100% { transform: translateY(0); }
-        }
-
-        .film-column-up { animation: scroll-up 45s linear infinite; }
-        .film-column-down { animation: scroll-down 40s linear infinite; }
-        .film-column:hover { animation-play-state: paused; }
-
-        /* White Film Strip Effect - التعديل المطلوب */
-        .film-frame {
-            position: relative;
-            background: rgba(255, 255, 255, 0.05); /* ابيض خفيف جداً */
-            border-left: 25px solid rgba(255, 255, 255, 0.08);
-            border-right: 25px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-
-        .film-frame:hover {
-            background: rgba(255, 255, 255, 0.15); /* يتفاعل مع الماوس ويصبح افتح */
-            border-color: rgba(216, 185, 122, 0.4); /* تلميح للون الذهبي عند اللمس */
-            transform: scale(1.02);
-            z-index: 50;
-        }
-
-        /* Sprocket Holes (ثقوب الفيلم) */
-        .sprocket {
-            width: 10px;
-            height: 14px;
-            background: #050505;
-            border-radius: 1px;
-            margin: 8px 0;
-        }
-
-        /* Modal Player */
-        #videoModal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.97);
-            z-index: 10000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(15px);
-        }
-        
-        .rtl { direction: rtl; }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #050505; }
-        ::-webkit-scrollbar-thumb { background: #d8b97a; }
-    </style>
-</head>
-<body>
-
-    <div class="grain"></div>
-
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-[1000] px-6 md:px-12 py-6 flex justify-between items-center bg-gradient-to-b from-black/90 to-transparent">
-        <div class="text-xl font-black tracking-tighter uppercase italic">
-            HESHAM <span class="text-[#d8b97a]">DIGITAL</span>
-        </div>
-        <div class="hidden md:flex gap-10 text-[10px] font-black uppercase tracking-[0.4em]">
-            <a href="#home" class="hover:text-[#d8b97a] transition-colors">Home</a>
-            <a href="#work" class="hover:text-[#d8b97a] transition-colors">Archive</a>
-            <a href="#contact" class="hover:text-[#d8b97a] transition-colors">Contact</a>
-        </div>
-        <button onclick="toggleLang()" id="langBtn" class="text-[10px] font-black border border-[#d8b97a] px-3 py-1 rounded text-[#d8b97a] hover:bg-[#d8b97a] hover:text-black transition-all">العربية</button>
-    </nav>
-
-    <!-- Hero Section -->
-    <section id="home" class="hero-bg h-screen flex flex-col items-center justify-center relative overflow-hidden">
-        <div class="text-center z-10 px-6">
-            <h1 id="heroTitle" class="text-5xl md:text-[8vw] font-black leading-none uppercase tracking-tighter mb-4">
-                HESHAM<br><span class="text-[#d8b97a] italic">ABDELHAMED</span>
-            </h1>
-            <p id="heroSub" class="text-[10px] md:text-sm font-bold tracking-[0.6em] uppercase opacity-60">Visual Storyteller • Multimedia Producer</p>
-        </div>
-        
-        <!-- Stats -->
-        <div class="absolute bottom-16 grid grid-cols-3 gap-8 md:gap-24 text-center z-10">
-            <div><div class="text-3xl font-black text-[#d8b97a]">12+</div><div class="text-[8px] uppercase tracking-widest opacity-40">Years</div></div>
-            <div><div class="text-3xl font-black text-[#d8b97a]">40+</div><div class="text-[8px] uppercase tracking-widest opacity-40">Films</div></div>
-            <div><div class="text-3xl font-black text-[#d8b97a]">10+</div><div class="text-[8px] uppercase tracking-widest opacity-40">Countries</div></div>
-        </div>
-    </section>
-
-    <!-- Visual Archive (Film Strip Section) -->
-    <section id="work" class="py-32 bg-[#050505] relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-6 mb-20 relative z-50">
-            <h2 id="workTitle" class="text-6xl md:text-9xl font-black uppercase tracking-tighter text-white/5 absolute -top-10 left-0">ARCHIVE</h2>
-            <p class="text-sm font-bold tracking-[0.5em] uppercase text-[#d8b97a] relative z-10">Selected Works</p>
-        </div>
-
-        <div class="flex justify-center gap-6 md:gap-12 h-[850px] overflow-hidden relative">
-            <!-- Shadows for Depth -->
-            <div class="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#050505] to-transparent z-40"></div>
-            <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#050505] to-transparent z-40"></div>
-
-            <!-- Column 1 -->
-            <div class="film-column film-column-up flex flex-col" id="col1"></div>
-            <!-- Column 2 -->
-            <div class="film-column film-column-down flex flex-col" id="col2"></div>
-            <!-- Column 3 (Desktop Only) -->
-            <div class="film-column film-column-up hidden lg:flex flex-col" id="col3"></div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-40 bg-black flex flex-col items-center justify-center text-center px-6 border-t border-white/5">
-        <h2 class="text-6xl md:text-8xl font-black mb-16 uppercase italic tracking-tighter">LET'S <span class="text-[#d8b97a]">WORK</span></h2>
-        <div class="flex flex-col md:flex-row gap-8 items-center">
-            <a href="tel:+966503064408" class="text-2xl font-bold tracking-widest hover:text-[#d8b97a] transition-all">+966 50 306 4408</a>
-            <span class="hidden md:block opacity-20">|</span>
-            <a href="mailto:per.hisham@gmail.com" class="text-2xl font-bold tracking-widest hover:text-[#d8b97a] transition-all">per.hisham@gmail.com</a>
-        </div>
-        <div class="mt-20 flex gap-8">
-            <a href="#" class="p-4 bg-zinc-900 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><i data-lucide="linkedin"></i></a>
-            <a href="#" class="p-4 bg-zinc-900 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><i data-lucide="instagram"></i></a>
-            <a href="#" class="p-4 bg-zinc-900 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><i data-lucide="mail"></i></a>
-        </div>
-    </section>
-
-    <!-- Video Player Modal -->
-    <div id="videoModal" onclick="closeVideo()">
-        <button class="absolute top-8 right-8 text-white/50 hover:text-white transition-colors"><i data-lucide="x" size="40"></i></button>
-        <div class="w-[90%] max-w-5xl aspect-video bg-black shadow-2xl overflow-hidden rounded-2xl border border-white/10" onclick="event.stopPropagation()">
-            <iframe id="videoIframe" src="" class="w-full h-full" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <script>
-        lucide.createIcons();
-
-        const videoList = [
-            "1081231929", "1093436208", "1012761186", "782962222", 
-            "1081226158", "348818970", "1137725566", "1088303838", 
-            "697540206", "348850766", "1127837184", "348850143"
+        const VIDEO_LINKS = [
+          "https://player.vimeo.com/video/1081231929", "https://player.vimeo.com/video/1093436208", "https://player.vimeo.com/video/1012761186",
+          "https://player.vimeo.com/video/782962222", "https://player.vimeo.com/video/1081226158", "https://player.vimeo.com/video/348818970"
         ];
 
-        function createStrip() {
-            const cols = [
-                document.getElementById('col1'),
-                document.getElementById('col2'),
-                document.getElementById('col3')
-            ];
+        const SectionDivider = ({ text }) => (
+          <div className="w-full h-20 bg-[#0a0a0a] flex items-center justify-center overflow-hidden border-y border-white/5 relative">
+            <div className="absolute inset-0 flex items-center opacity-5">
+               <div className="whitespace-nowrap animate-marquee font-black text-6xl">
+                 REC • REC • REC • REC • REC • REC • REC • REC • REC • REC • REC • REC
+               </div>
+            </div>
+            <div className="relative z-10 flex items-center gap-4">
+              <div className="h-[1px] w-16 bg-[#d8b97a]" />
+              <span className="text-[10px] font-black tracking-[0.4em] uppercase text-[#d8b97a]">{text}</span>
+              <div className="h-[1px] w-16 bg-[#d8b97a]" />
+            </div>
+          </div>
+        );
 
-            const repeatedList = [...videoList, ...videoList, ...videoList];
+        function App() {
+          const [lang, setLang] = useState('AR');
+          const [hoverX, setHoverX] = useState(88);
+          const [activeEvent, setActiveEvent] = useState(TIMELINE_EVENTS[4]);
+          const [selectedVideo, setSelectedVideo] = useState(null);
 
-            repeatedList.forEach((id, index) => {
-                const targetCol = cols[index % cols.length];
-                
-                const frame = document.createElement('div');
-                frame.className = 'film-frame w-64 md:w-80 aspect-[4/5] flex items-center justify-center p-2 group';
-                frame.onclick = () => openVideo(id);
+          return (
+            <div className={`min-h-screen bg-[#050505] text-white ${lang === 'AR' ? 'rtl' : 'ltr'}`}>
+              
+              {/* --- NAV BAR (RE-ADDED) --- */}
+              <nav className="fixed top-0 w-full z-[100] nav-glass px-8 py-4 flex justify-between items-center">
+                <div className="text-xl font-black tracking-tighter uppercase flex items-center gap-2">
+                   <div className="w-3 h-3 bg-red-600 rounded-full animate-pulse" />
+                   HESHAM <span className="text-[#d8b97a]">ABDELHAMED</span>
+                </div>
+                <div className="flex gap-8 items-center">
+                   <div className="hidden md:flex gap-6 text-[10px] font-bold tracking-widest uppercase text-zinc-400">
+                      <a href="#" className="hover:text-[#d8b97a]">Home</a>
+                      <a href="#experience" className="hover:text-[#d8b97a]">Experience</a>
+                      <a href="#work" className="hover:text-[#d8b97a]">Portfolio</a>
+                      <a href="#contact" className="hover:text-[#d8b97a]">Contact</a>
+                   </div>
+                   <button onClick={() => setLang(lang === 'EN' ? 'AR' : 'EN')} className="text-[10px] font-black bg-[#d8b97a] text-black px-4 py-1.5 rounded-full hover:bg-white transition-all">
+                     {lang === 'EN' ? 'العربية' : 'ENGLISH'}
+                   </button>
+                </div>
+              </nav>
 
-                // Sprocket Holes
-                const leftSprockets = document.createElement('div');
-                leftSprockets.className = 'absolute left-[-18px] top-0 bottom-0 flex flex-col justify-around';
-                for(let i=0; i<8; i++) leftSprockets.innerHTML += '<div class="sprocket"></div>';
-                
-                const rightSprockets = document.createElement('div');
-                rightSprockets.className = 'absolute right-[-18px] top-0 bottom-0 flex flex-col justify-around';
-                for(let i=0; i<8; i++) rightSprockets.innerHTML += '<div class="sprocket"></div>';
+              {/* Hero */}
+              <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
+                <div className="absolute inset-0 bg-hero z-0" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black z-1" />
+                <div className="relative z-10 text-center px-6">
+                  <motion.h1 initial={{y: 50, opacity: 0}} animate={{y: 0, opacity: 1}} className="text-7xl md:text-[11rem] font-black leading-none uppercase mb-6">
+                    {lang === 'AR' ? 'راوي' : 'STORY'}<br />
+                    <span className="text-transparent italic" style={{ WebkitTextStroke: "1.5px #d8b97a" }}>{lang === 'AR' ? 'قصص' : 'TELLER'}</span>
+                  </motion.h1>
+                  <p className="text-[#d8b97a] text-[10px] md:text-sm font-black tracking-[0.7em] uppercase mb-12 opacity-80">
+                    {lang === 'AR' ? 'منتج مرئي • مدير إبداعي' : 'Visual Producer • Creative Brand Director'}
+                  </p>
+                  <div className="flex gap-4 justify-center">
+                    <a href="#" className="flex items-center gap-3 px-10 py-4 bg-[#d8b97a] text-black font-black uppercase tracking-widest text-[10px] rounded-full hover:bg-white transition-all">
+                      <Icons.Download /> {lang === 'AR' ? 'ملف الأعمال' : 'Portfolio PDF'}
+                    </a>
+                  </div>
+                </div>
+              </section>
 
-                frame.appendChild(leftSprockets);
-                frame.appendChild(rightSprockets);
+              <SectionDivider text={lang === 'AR' ? 'الخبرة العملية' : 'WORK EXPERIENCE'} />
 
-                // Video Thumbnail
-                frame.innerHTML += `
-                    <div class="w-full h-full overflow-hidden bg-black border-y border-white/5 relative">
-                        <img src="https://vumbnail.com/${id}.jpg" class="w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-transparent transition-colors">
-                            <i data-lucide="play" class="text-white opacity-0 group-hover:opacity-100 scale-125 transition-all duration-300"></i>
+              {/* Experience with TV & Premiere Timeline */}
+              <section id="experience" className="py-24 premiere-bg border-y border-white/5">
+                <div className="max-w-7xl mx-auto px-6">
+                  
+                  {/* MONITOR SECTION (TV) */}
+                  <div className="grid lg:grid-cols-12 gap-10 mb-16">
+                    <div className="lg:col-span-8">
+                      <div className="tv-frame aspect-video p-2">
+                        <div className="tv-screen-content">
+                          <div className="scanline" />
+                          <div className="absolute top-4 left-6 z-20 flex items-center gap-2">
+                             <div className="w-2 h-2 bg-red-600 rounded-full animate-pulse" />
+                             <span className="text-[10px] font-mono font-bold text-red-600">REC 00:12:44:02</span>
+                          </div>
+                          <iframe src={`${activeEvent.video}?background=1&autoplay=1&loop=1&muted=1`} className="w-full h-full object-cover scale-110 grayscale-[0.3]" frameBorder="0" />
                         </div>
+                      </div>
                     </div>
-                `;
+                    
+                    {/* INFO PANEL */}
+                    <div className="lg:col-span-4 premiere-panel p-8 rounded-xl shadow-2xl flex flex-col justify-center">
+                      <div className="text-[10px] text-blue-400 font-bold mb-6 tracking-widest uppercase">Clip Information</div>
+                      <div className="space-y-6">
+                        <h3 className="text-4xl font-black uppercase leading-tight">{lang === 'AR' ? activeEvent.role_ar : activeEvent.role_en}</h3>
+                        <div className="flex items-center gap-3">
+                           <div className="h-[2px] w-8 bg-[#d8b97a]" />
+                           <p className="text-xl font-bold text-[#d8b97a]">{activeEvent.company}</p>
+                        </div>
+                        <p className="text-sm text-zinc-400 leading-relaxed italic">{lang === 'AR' ? activeEvent.details_ar : activeEvent.details_ar}</p>
+                        <div className="pt-8 border-t border-white/10 grid grid-cols-2 gap-4 text-[10px] font-mono text-zinc-500 uppercase">
+                          <div>Time: {activeEvent.year}</div>
+                          <div>Status: Mastered</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-                targetCol.appendChild(frame);
-            });
-            lucide.createIcons();
+                  {/* PREMIERE TIMELINE */}
+                  <div className="premiere-panel rounded-xl overflow-hidden flex shadow-2xl border-2 border-black">
+                    {/* Toolbar */}
+                    <div className="w-14 bg-[#2b2b2b] border-r border-black flex flex-col items-center py-6 gap-8">
+                      <div className="p-2 bg-[#3d3d3d] rounded cursor-pointer shadow-lg"><Icons.Selection /></div>
+                      <div className="p-2 hover:bg-[#3d3d3d] rounded cursor-pointer transition-colors"><Icons.Razor /></div>
+                      <div className="w-8 h-[1px] bg-white/5" />
+                      <div className="text-[12px] font-black text-zinc-600">T</div>
+                    </div>
+
+                    {/* Tracks Area */}
+                    <div className="flex-1 relative flex flex-col bg-[#111]">
+                      {/* Ruler */}
+                      <div className="h-10 bg-[#2b2b2b] border-b border-black flex items-end px-4 relative">
+                         {[...Array(11)].map((_, i) => (
+                           <div key={i} className="absolute h-4 border-l border-white/20 text-[9px] text-zinc-500 pl-1.5 font-mono" style={{left: `${i*10}%`}}>
+                             00:0{i}:00:00
+                           </div>
+                         ))}
+                      </div>
+
+                      {/* Interaction Layer */}
+                      <div className="relative cursor-none group" 
+                           onMouseMove={(e) => {
+                             const rect = e.currentTarget.getBoundingClientRect();
+                             const x = ((e.clientX - rect.left) / rect.width) * 100;
+                             setHoverX(x);
+                             const found = TIMELINE_EVENTS.find(ev => x >= ev.start && x <= ev.end);
+                             if(found) setActiveEvent(found);
+                           }}>
+                        
+                        {/* Playhead */}
+                        <div className="playhead-line" style={{ left: `${hoverX}%` }}>
+                          <div className="playhead-head" />
+                        </div>
+
+                        {/* Tracks */}
+                        {['V2', 'V1'].map((tName) => (
+                          <div key={tName} className="flex border-b border-black">
+                             <div className="track-label">{tName}</div>
+                             <div className="flex-1 h-14 relative bg-[#0d0d0d] overflow-hidden">
+                               {TIMELINE_EVENTS.filter(e => e.track === tName).map(ev => (
+                                 <div key={ev.id} className={`absolute h-[70%] top-[15%] rounded border-l-4 border-white/20 flex items-center px-4 text-[9px] font-black tracking-tighter uppercase transition-all duration-300 ${activeEvent.id === ev.id ? 'brightness-125 scale-y-105 z-10' : 'opacity-40 grayscale'}`}
+                                      style={{ left: `${ev.start}%`, width: `${ev.end-ev.start}%`, backgroundColor: ev.color }}>
+                                   {ev.company}
+                                 </div>
+                               ))}
+                             </div>
+                          </div>
+                        ))}
+
+                        {/* Audio Tracks (Lower Visual) */}
+                        <div className="flex border-t-4 border-black/50">
+                           <div className="track-label text-blue-400">A1</div>
+                           <div className="flex-1 h-10 bg-zinc-900/40 relative">
+                             <div className="absolute inset-x-0 top-1/2 h-[1px] bg-green-900/30" />
+                           </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <SectionDivider text={lang === 'AR' ? 'معرض الأعمال' : 'PORTFOLIO ARCHIVE'} />
+
+              {/* Simplified Grid for Speed */}
+              <section id="work" className="py-24 px-6 max-w-7xl mx-auto">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                  {VIDEO_LINKS.map((url, i) => (
+                    <motion.div 
+                      whileHover={{ scale: 1.02 }}
+                      key={i} 
+                      onClick={() => setSelectedVideo(url)}
+                      className="group relative aspect-[9/16] bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer border border-white/5"
+                    >
+                      <img src={`https://vumbnail.com/${url.split('/').pop()}.jpg`} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-700" />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="p-4 bg-[#d8b97a] rounded-full text-black scale-0 group-hover:scale-100 transition-transform duration-500 shadow-2xl">
+                          <Icons.Play />
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </section>
+
+              {/* Contact */}
+              <section id="contact" className="py-32 px-6 bg-[#080808]">
+                <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20">
+                  <div className="space-y-12">
+                    <h2 className="text-7xl font-black uppercase tracking-tighter text-zinc-800">LET'S<br/>TALK</h2>
+                    <div className="space-y-8">
+                       <div className="p-8 bg-zinc-900/30 rounded-3xl border border-white/5">
+                          <div className="text-[10px] text-[#d8b97a] font-black mb-2 uppercase tracking-widest">Phone (KSA)</div>
+                          <a href="tel:+966503064408" className="text-3xl font-black block" style={{direction: 'ltr'}}>+966 50 306 4408</a>
+                       </div>
+                       <div className="p-8 bg-zinc-900/30 rounded-3xl border border-white/5">
+                          <div className="text-[10px] text-[#d8b97a] font-black mb-2 uppercase tracking-widest">Phone (EGY)</div>
+                          <a href="tel:+201010723207" className="text-3xl font-black block" style={{direction: 'ltr'}}>+20 10 10 72 3207</a>
+                       </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col justify-center items-center text-center">
+                     <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-[#d8b97a] mb-8 shadow-2xl">
+                        <img src="ME.jpg" className="w-full h-full object-cover" />
+                     </div>
+                     <div className="flex gap-6">
+                        <a href="#" className="p-4 bg-zinc-900 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><Icons.Linkedin /></a>
+                        <a href="#" className="p-4 bg-zinc-900 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><Icons.Instagram /></a>
+                        <a href="#" className="p-4 bg-zinc-900 rounded-full hover:bg-[#d8b97a] hover:text-black transition-all"><Icons.Facebook /></a>
+                     </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Video Modal */}
+              <AnimatePresence>
+                {selectedVideo && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[110] bg-black/98 flex items-center justify-center p-4 backdrop-blur-xl">
+                    <button onClick={() => setSelectedVideo(null)} className="absolute top-10 right-10 text-white hover:text-[#d8b97a]"><Icons.X /></button>
+                    <div className="w-full max-w-5xl aspect-video rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+                      <iframe src={`${selectedVideo}?autoplay=1`} className="w-full h-full" frameBorder="0" allow="autoplay; fullscreen" allowFullScreen />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <footer className="py-12 text-center opacity-20 text-[9px] font-black tracking-[0.5em] uppercase">
+                Hesham Abdelhamed • Visual Storyteller • 2026
+              </footer>
+            </div>
+          );
         }
 
-        function openVideo(id) {
-            const modal = document.getElementById('videoModal');
-            const iframe = document.getElementById('videoIframe');
-            iframe.src = `https://player.vimeo.com/video/${id}?autoplay=1`;
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeVideo() {
-            const modal = document.getElementById('videoModal');
-            const iframe = document.getElementById('videoIframe');
-            iframe.src = '';
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        let currentLang = 'EN';
-        function toggleLang() {
-            currentLang = currentLang === 'EN' ? 'AR' : 'EN';
-            const btn = document.getElementById('langBtn');
-            const title = document.getElementById('heroTitle');
-            const sub = document.getElementById('heroSub');
-            const work = document.getElementById('workTitle');
-
-            if (currentLang === 'AR') {
-                document.body.classList.add('rtl');
-                btn.innerText = 'ENGLISH';
-                title.innerHTML = 'هشام<br><span class="text-[#d8b97a] italic">عبد الحميد</span>';
-                sub.innerText = 'راوي قصص بصرية • منتج وسائط متعددة';
-                work.innerText = 'الأرشيف';
-            } else {
-                document.body.classList.remove('rtl');
-                btn.innerText = 'العربية';
-                title.innerHTML = 'HESHAM<br><span class="text-[#d8b97a] italic">ABDELHAMED</span>';
-                sub.innerText = 'Visual Storyteller • Multimedia Producer';
-                work.innerText = 'ARCHIVE';
-            }
-        }
-
-        window.onload = createStrip;
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 </body>
 </html>
