@@ -1,265 +1,417 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Red Helmet Academy | Online Course Booking</title>
-    <link rel="icon" href="data:," />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <canvas id="ember-canvas" aria-hidden="true"></canvas>
-    <div class="cursor-glow" aria-hidden="true"></div>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Helmet Academy - Professional Fire Protection Training</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #fffaf5;
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffffff 100%);
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .course-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .primary-red { color: #e53935; } 
+        .bg-primary-red { background-color: #e53935; }
+        
+        /* Modal Styles for Course Details */
+        #courseModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: white;
+            max-width: 600px;
+            width: 100%;
+            border-radius: 24px;
+            overflow: hidden;
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
 
-    <header class="site-header">
-      <a class="brand" href="/" data-route>
-        <img src="/assets/red-helmet-logo-horizontal.png" alt="Red Helmet Engineering" />
-      </a>
-      <nav class="main-nav" aria-label="Primary navigation">
-        <a href="/#courses">Courses</a>
-        <a href="/#schedule">Schedule</a>
-        <a href="/#payment">Payment</a>
-        <a href="/#contact">Contact</a>
-      </nav>
-      <a class="header-action" href="/#schedule">Book a Seat</a>
+    <!-- Header -->
+    <header class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-orange-100">
+        <div class="container mx-auto px-4 md:px-6 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-4 md:gap-8">
+                <!-- Logo Added -->
+                <a href="#" class="flex items-center gap-2">
+                    <img src="assets/red-helmet-flame.png" alt="Red Helmet Logo" class="w-8 h-8 md:w-10 md:h-10 object-contain">
+                    <span class="text-xl md:text-2xl font-black text-gray-900 tracking-tighter">
+                        RED<span class="primary-red">HELMET</span>
+                    </span>
+                </a>
+                <nav class="hidden lg:flex gap-6 font-semibold text-sm uppercase tracking-wider">
+                    <a href="#" class="primary-red underline underline-offset-8">Home</a>
+                    <a href="#courses" class="hover:text-red-500 transition">Courses</a>
+                    <a href="#about" class="hover:text-red-500 transition">About</a>
+                    <a href="#faq" class="hover:text-red-500 transition">FAQ</a>
+                </nav>
+            </div>
+            <div class="flex items-center gap-3">
+                <button class="p-2 text-gray-500 hover:text-red-500 font-bold text-sm">AR</button>
+                <a href="#courses" class="bg-gray-900 text-white px-5 py-2 md:px-6 md:py-2.5 rounded-full text-xs md:text-sm font-bold hover:bg-red-600 transition duration-300">Enroll Now</a>
+            </div>
+        </div>
     </header>
 
-    <main id="app"></main>
-
-    <template id="home-template">
-      <section class="hero" id="top">
-        <div class="hero-copy reveal">
-          <span class="eyebrow">Red Helmet Academy</span>
-          <h1>Book certified fire engineering training with confidence.</h1>
-          <p>Instructor-led online and in-person courses for safety professionals, engineers, designers, AHJs, facility managers, and project teams.</p>
-          <div class="hero-actions">
-            <a class="button primary" href="#schedule">View Schedule</a>
-            <a class="button secondary" href="#courses">Explore Courses</a>
-          </div>
-          <div class="trust-row" aria-label="Trust highlights">
-            <span>Secure online payment ready</span>
-            <span>NFPA AEN training options</span>
-            <span>Certificates of completion</span>
-          </div>
-        </div>
-        <div class="hero-visual reveal" aria-hidden="true">
-          <div class="scene-card">
-            <div class="halo"></div>
-            <div class="flame-3d">
-              <span class="flame-piece piece-one"></span>
-              <span class="flame-piece piece-two"></span>
-              <span class="flame-piece piece-three"></span>
-              <img src="/assets/red-helmet-flame.png" alt="" />
+    <!-- Hero Section -->
+    <section class="pt-28 md:pt-40 pb-20 hero-gradient overflow-hidden">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 text-left">
+                <span class="bg-red-100 text-red-600 px-4 py-1 rounded-full text-[10px] md:text-xs font-bold mb-6 inline-block uppercase tracking-widest">Leading Fire Protection Academy</span>
+                <h1 class="text-4xl md:text-6xl font-black leading-tight mb-6">
+                    Master NFPA <br>
+                    <span class="primary-red underline decoration-red-200 underline-offset-8">Engineering</span> Standards
+                </h1>
+                <p class="text-gray-600 text-base md:text-lg mb-10 max-w-lg leading-relaxed">
+                    Empowering engineers to master global fire safety codes through intensive, practical training led by international NFPA experts.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="handleEnroll()" class="bg-primary-red text-white px-8 py-4 rounded-full font-bold shadow-lg shadow-red-200 hover:scale-105 transition flex items-center gap-2">
+                        Get Started <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                    <button onclick="playVideo()" class="flex items-center gap-3 font-bold hover:text-red-500 transition group">
+                        <span class="w-12 h-12 flex items-center justify-center rounded-full bg-red-100 text-red-600 group-hover:bg-red-600 group-hover:text-white transition">
+                            <i class="fa-solid fa-play"></i>
+                        </span>
+                        Watch Intro
+                    </button>
+                </div>
             </div>
-            <div class="orbit orbit-one"></div>
-            <div class="orbit orbit-two"></div>
-          </div>
-          <div class="floating-note note-one">
-            <strong>30h</strong>
-            <span>Life Safety Track</span>
-          </div>
-          <div class="floating-note note-two">
-            <strong>Live</strong>
-            <span>Online Classes</span>
-          </div>
-        </div>
-      </section>
-
-      <section class="section intro-section" id="about">
-        <div class="section-heading reveal">
-          <span class="eyebrow">Why Red Helmet</span>
-          <h2>Practical training built from real fire protection engineering work.</h2>
-          <p>Red Helmet Engineering training helps teams apply codes and standards effectively, design safer building systems, and gain the confidence to solve real project challenges.</p>
-        </div>
-        <div class="benefit-grid">
-          <article class="benefit-card reveal">
-            <span class="icon" data-icon="expert"></span>
-            <h3>Expert-led sessions</h3>
-            <p>Learn directly from experienced fire protection engineers and approved instructors.</p>
-          </article>
-          <article class="benefit-card reveal">
-            <span class="icon" data-icon="certificate"></span>
-            <h3>Recognized outcomes</h3>
-            <p>Earn Red Helmet certificates or official NFPA completion credentials where applicable.</p>
-          </article>
-          <article class="benefit-card reveal">
-            <span class="icon" data-icon="hybrid"></span>
-            <h3>Flexible delivery</h3>
-            <p>Choose online live training or in-person classroom sessions for team learning.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="section courses-section" id="courses">
-        <div class="section-heading reveal">
-          <span class="eyebrow">Courses</span>
-          <h2>Choose your training path.</h2>
-          <p>Clear course cards, durations, delivery modes, and booking actions make browsing fast on desktop and mobile.</p>
-        </div>
-        <div class="course-grid" id="course-grid"></div>
-      </section>
-
-      <section class="section schedule-section" id="schedule">
-        <div class="schedule-header reveal">
-          <div>
-            <span class="eyebrow">Training calendar</span>
-            <h2>Upcoming seats and online batches.</h2>
-          </div>
-          <a class="button primary" href="#courses">Select Course</a>
-        </div>
-        <div class="schedule-table reveal" role="table" aria-label="Upcoming course schedule">
-          <div class="table-row table-head" role="row">
-            <span role="columnheader">Course</span>
-            <span role="columnheader">Date</span>
-            <span role="columnheader">Mode</span>
-            <span role="columnheader">Hours</span>
-            <span role="columnheader">Seat</span>
-          </div>
-          <div id="schedule-list"></div>
-        </div>
-      </section>
-
-      <section class="section payment-section" id="payment">
-        <div class="payment-shell reveal">
-          <div>
-            <span class="eyebrow">Secure checkout</span>
-            <h2>Ready for online payment gateway integration.</h2>
-            <p>The checkout flow keeps trust signals visible: encrypted payment, clear course summary, learner contact details, and a dedicated payment handoff button for PayTabs or any preferred provider.</p>
-          </div>
-          <div class="payment-card" aria-label="Secure payment preview">
-            <div class="card-chip"></div>
-            <span>Red Helmet Academy</span>
-            <strong>Secure Course Booking</strong>
-            <small>Cards · Wallets · Bank gateway</small>
-          </div>
-        </div>
-      </section>
-
-      <section class="section contact-section" id="contact">
-        <div class="contact-panel reveal">
-          <span class="eyebrow">Need a custom cohort?</span>
-          <h2>Train your team online or in person.</h2>
-          <p>Contact Red Helmet Engineering for private schedules, group pricing, and tailored fire protection learning paths.</p>
-          <a class="button primary" href="mailto:Info@redhelmet-fp.com">Contact Academy</a>
-        </div>
-      </section>
-    </template>
-
-    <template id="course-template">
-      <section class="section course-detail">
-        <a class="back-link" href="/" data-route>Back to Courses</a>
-        <div class="detail-layout">
-          <div class="detail-media reveal">
-            <div class="detail-scene" aria-hidden="true">
-              <div class="flame-3d compact">
-                <span class="flame-piece piece-one"></span>
-                <span class="flame-piece piece-two"></span>
-                <span class="flame-piece piece-three"></span>
-                <img src="/assets/red-helmet-flame.png" alt="" />
-              </div>
+            <div class="md:w-1/2 mt-16 md:mt-0 relative w-full">
+                <div class="relative z-10 animate-float max-w-md mx-auto md:max-w-none">
+                    <!-- Image 01 used here -->
+                    <img src="assets/01.jpg" alt="Engineering Training" class="rounded-3xl shadow-2xl border-4 md:border-8 border-white w-full h-[300px] md:h-[450px] object-cover">
+                    <div class="absolute -bottom-6 -left-4 md:-left-6 bg-white p-4 md:p-6 rounded-2xl shadow-xl flex items-center gap-4 animate-bounce">
+                        <div class="w-10 h-10 md:w-12 md:h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] md:text-sm text-gray-500 uppercase font-bold">Verified by</p>
+                            <p class="font-bold text-sm md:text-base">NFPA Experts</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="schedule-mini">
-              <span>Next available batch</span>
-              <strong data-course-date></strong>
-            </div>
-          </div>
-          <aside class="detail-panel reveal">
-            <span class="eyebrow" data-course-level></span>
-            <h1 data-course-title></h1>
-            <p class="instructor" data-course-instructor></p>
-            <p data-course-description></p>
-            <div class="course-meta">
-              <span data-course-hours></span>
-              <span data-course-mode></span>
-              <span>Certificate included</span>
-            </div>
-            <ul class="learn-list" data-course-learn></ul>
-            <div class="price-row">
-              <strong data-course-price></strong>
-              <span>Online payment available</span>
-            </div>
-            <div class="detail-actions">
-              <button class="button primary" data-book>Book Now</button>
-              <button class="button secondary" data-open-preview>Preview Course</button>
-            </div>
-          </aside>
         </div>
-      </section>
-    </template>
+    </section>
 
-    <template id="checkout-template">
-      <section class="section checkout">
-        <div class="checkout-layout">
-          <div class="checkout-card reveal">
-            <span class="eyebrow">Checkout</span>
-            <h1>Reserve your seat</h1>
-            <form id="checkout-form">
-              <label>Name<input name="name" type="text" autocomplete="name" required placeholder="Full name" /></label>
-              <label>Email<input name="email" type="email" autocomplete="email" required placeholder="you@example.com" /></label>
-              <label>Phone<input name="phone" type="tel" autocomplete="tel" required placeholder="+20 100 919 500" /></label>
-              <button class="button primary full" type="submit">Proceed to Payment</button>
-            </form>
-            <p class="trust-note">Payment gateway placeholder ready for PayTabs integration. Your booking data stays clear before payment handoff.</p>
-          </div>
-          <aside class="order-summary reveal">
-            <span>Course summary</span>
-            <strong data-checkout-title></strong>
-            <em data-checkout-price></em>
-            <p data-checkout-meta></p>
-            <div class="secure-row">
-              <span class="icon" data-icon="lock"></span>
-              <p>Encrypted payment handoff, transparent pricing, and confirmation email after successful payment.</p>
-            </div>
-          </aside>
-        </div>
-      </section>
-    </template>
-
-    <template id="success-template">
-      <section class="section success">
-        <div class="success-card reveal">
-          <img src="/assets/red-helmet-flame.png" alt="" />
-          <span class="eyebrow">Booking confirmed</span>
-          <h1>Payment Successful</h1>
-          <p>Your Red Helmet Academy seat is confirmed. Check your email for access details and schedule instructions.</p>
-          <a class="button primary" href="/" data-route>Start Learning</a>
-        </div>
-      </section>
-    </template>
-
-    <div class="modal" id="preview-modal" aria-hidden="true">
-      <div class="modal-backdrop" data-close-preview></div>
-      <div class="modal-card" role="dialog" aria-modal="true" aria-label="Course preview">
-        <button class="modal-close" data-close-preview aria-label="Close preview">x</button>
-        <div class="modal-visual">
-          <div class="flame-3d compact">
-            <span class="flame-piece piece-one"></span>
-            <span class="flame-piece piece-two"></span>
-            <span class="flame-piece piece-three"></span>
-            <img src="/assets/red-helmet-flame.png" alt="" />
-          </div>
-        </div>
-        <h2>Course Preview</h2>
-        <p>Live instructor-led learning, practical engineering examples, schedule clarity, and secure booking built for professional teams.</p>
-      </div>
+    <!-- Video Modal (Hidden by default) -->
+    <div id="videoContainer" class="hidden fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4">
+        <button onclick="closeVideo()" class="absolute top-6 right-6 text-white text-3xl hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
+        <video id="introVideo" controls class="max-w-4xl w-full rounded-2xl shadow-2xl">
+            <source src="assets/video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
     </div>
 
-    <footer class="site-footer">
-      <div>
-        <img src="/assets/red-helmet-logo-horizontal.png" alt="Red Helmet Engineering" />
-        <p>Professional fire protection training for safer buildings and stronger engineering teams.</p>
-      </div>
-      <div class="footer-links">
-        <a href="mailto:Info@redhelmet-fp.com">Info@redhelmet-fp.com</a>
-        <a href="https://redhelmet-fp.com/" target="_blank" rel="noreferrer">redhelmet-fp.com</a>
-        <span>Egypt: 6th of October City, Giza</span>
-        <span>US: 55 West St, Suite 201, Walpole, MA 02081</span>
-      </div>
+    <!-- Stats Section -->
+    <section class="py-12 border-y border-orange-50 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="reveal">
+                    <h3 class="text-3xl md:text-4xl font-black mb-1">15+</h3>
+                    <p class="text-gray-500 text-xs md:text-sm uppercase font-bold">Specialized Courses</p>
+                </div>
+                <div class="reveal">
+                    <h3 class="text-3xl md:text-4xl font-black mb-1">3.5k</h3>
+                    <p class="text-gray-500 text-xs md:text-sm uppercase font-bold">Engineers Trained</p>
+                </div>
+                <div class="reveal">
+                    <h3 class="text-3xl md:text-4xl font-black mb-1">10+</h3>
+                    <p class="text-gray-500 text-xs md:text-sm uppercase font-bold">Expert Instructors</p>
+                </div>
+                <div class="reveal">
+                    <h3 class="text-3xl md:text-4xl font-black mb-1">100%</h3>
+                    <p class="text-gray-500 text-xs md:text-sm uppercase font-bold">Practical Approach</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Courses Section -->
+    <section id="courses" class="py-24">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                <div class="reveal">
+                    <span class="text-red-500 font-bold mb-2 block uppercase tracking-widest text-xs">Training Programs</span>
+                    <h2 class="text-3xl md:text-4xl font-black">Professional Engineering Courses</h2>
+                </div>
+                <div class="w-full md:w-auto reveal">
+                    <input type="text" placeholder="Search NFPA Code..." class="px-6 py-3 rounded-full bg-white border border-gray-100 focus:outline-none focus:ring-2 focus:ring-red-200 w-full md:w-64 shadow-sm">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Course 1 (02.jpg) -->
+                <div onclick="openCourse('NFPA 13', 'Design and installation of sprinkler systems including hydraulic calculations, hazard identification, and component selection.')" class="course-card bg-white rounded-2xl overflow-hidden border border-gray-50 transition-all duration-300 reveal cursor-pointer">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="assets/02.jpg" alt="Sprinklers" class="w-full h-full object-cover">
+                        <div class="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">$450.00</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3 text-red-500 text-sm">
+                            <i class="fa-solid fa-fire-extinguisher"></i>
+                            <span class="font-bold">NFPA 13</span>
+                        </div>
+                        <h4 class="text-xl font-bold mb-4 group-hover:text-red-500 transition">Fire Sprinkler System Design</h4>
+                        <p class="text-gray-500 text-sm mb-4">Click to see course syllabus and practical modules.</p>
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
+                            <span class="text-xs font-bold text-gray-400 uppercase">45 Learning Hours</span>
+                            <button onclick="event.stopPropagation(); handleEnroll()" class="text-red-600 font-bold text-sm hover:underline">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course 2 (03.jpg) -->
+                <div onclick="openCourse('NFPA 72', 'Comprehensive guide to fire alarm systems, detector placement, notification appliances, and control panel logic.')" class="course-card bg-white rounded-2xl overflow-hidden border border-gray-50 transition-all duration-300 reveal cursor-pointer">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="assets/03.jpg" alt="Alarm" class="w-full h-full object-cover">
+                        <div class="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">$380.00</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3 text-red-500 text-sm">
+                            <i class="fa-solid fa-bell"></i>
+                            <span class="font-bold">NFPA 72</span>
+                        </div>
+                        <h4 class="text-xl font-bold mb-4">Fire Alarm & Detection Systems</h4>
+                        <p class="text-gray-500 text-sm mb-4">Complete training on notification zones and sensor selection.</p>
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
+                            <span class="text-xs font-bold text-gray-400 uppercase">35 Learning Hours</span>
+                            <button onclick="event.stopPropagation(); handleEnroll()" class="text-red-600 font-bold text-sm hover:underline">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course 3 (04.jpg) -->
+                <div onclick="openCourse('NFPA 20', 'Designing and installing stationary fire pumps, performance curve analysis, and water supply testing.')" class="course-card bg-white rounded-2xl overflow-hidden border border-gray-50 transition-all duration-300 reveal cursor-pointer">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="assets/04.jpg" alt="Pumps" class="w-full h-full object-cover">
+                        <div class="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">$320.00</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3 text-red-500 text-sm">
+                            <i class="fa-solid fa-faucet-drip"></i>
+                            <span class="font-bold">NFPA 20</span>
+                        </div>
+                        <h4 class="text-xl font-bold mb-4">Fire Pumps & Water Storage</h4>
+                        <p class="text-gray-500 text-sm mb-4">Mastering pump selection and suction piping design.</p>
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-50">
+                            <span class="text-xs font-bold text-gray-400 uppercase">25 Learning Hours</span>
+                            <button onclick="event.stopPropagation(); handleEnroll()" class="text-red-600 font-bold text-sm hover:underline">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section (05.jpg) -->
+    <section id="about" class="py-24 bg-red-50/30">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row items-center gap-16">
+            <div class="md:w-1/2 relative reveal">
+                <img src="assets/05.jpg" alt="Advanced Training" class="rounded-3xl shadow-2xl w-full object-cover h-[400px]">
+                <div class="absolute -bottom-8 -right-8 bg-white p-6 rounded-2xl shadow-2xl">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-widest">Certified Alumni</p>
+                    <p class="text-3xl font-black">1,200+</p>
+                </div>
+            </div>
+            <div class="md:w-1/2 reveal">
+                <span class="bg-red-100 text-red-600 px-4 py-1 rounded-full text-xs font-bold mb-4 inline-block uppercase">Why Choose Us?</span>
+                <h2 class="text-3xl md:text-4xl font-black mb-6 leading-tight">Elevate Your Career with International NFPA Standards</h2>
+                <p class="text-gray-600 mb-8 leading-relaxed">
+                    Our curriculum is designed by working consultants. We bridge the gap between academic theory and on-site engineering reality.
+                </p>
+                <div class="space-y-4 mb-10">
+                    <div class="flex items-center gap-4 p-4 bg-white rounded-xl border border-red-50">
+                        <i class="fa-solid fa-check-double text-green-500"></i>
+                        <span class="font-bold text-sm">Real-world Project Templates</span>
+                    </div>
+                    <div class="flex items-center gap-4 p-4 bg-white rounded-xl border border-red-50">
+                        <i class="fa-solid fa-check-double text-green-500"></i>
+                        <span class="font-bold text-sm">Lifetime Access to Updates</span>
+                    </div>
+                </div>
+                <button onclick="handleEnroll()" class="bg-primary-red text-white px-10 py-4 rounded-full font-bold shadow-lg hover:scale-105 transition">Register Today</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Course Details Modal -->
+    <div id="courseModal">
+        <div class="modal-content">
+            <div class="bg-gray-900 p-8 text-white relative">
+                <button onclick="closeModal()" class="absolute top-4 right-4 text-white/50 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <span id="modalCode" class="text-red-500 font-bold text-sm uppercase tracking-widest block mb-2"></span>
+                <h3 id="modalTitle" class="text-2xl font-black"></h3>
+            </div>
+            <div class="p-8">
+                <h4 class="font-bold text-gray-900 mb-4">What you will learn:</h4>
+                <p id="modalDesc" class="text-gray-600 leading-relaxed mb-8"></p>
+                <div class="flex gap-4">
+                    <button onclick="handleEnroll()" class="flex-1 bg-red-600 text-white font-bold py-3 rounded-xl hover:bg-red-700 transition">Confirm Booking</button>
+                    <button onclick="closeModal()" class="px-6 border border-gray-200 rounded-xl font-bold hover:bg-gray-50 transition">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-20 pb-10">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <div>
+                    <div class="flex items-center gap-2 mb-6">
+                        <img src="assets/red-helmet-flame.png" alt="Logo" class="w-8 h-8 brightness-0 invert">
+                        <span class="text-xl font-black tracking-tighter">RED<span class="text-red-500">HELMET</span></span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                        Professional Engineering training for NFPA codes and fire safety standards.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-600 transition"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <!-- Instagram Icon Added -->
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-pink-600 transition"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-600 transition"><i class="fa-brands fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h6 class="font-bold mb-6 text-red-500 uppercase text-xs tracking-widest">Navigation</h6>
+                    <ul class="space-y-3 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">Home</a></li>
+                        <li><a href="#courses" class="hover:text-white transition">Courses</a></li>
+                        <li><a href="#about" class="hover:text-white transition">About</a></li>
+                        <li><a href="#faq" class="hover:text-white transition">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h6 class="font-bold mb-6 text-red-500 uppercase text-xs tracking-widest">Contact</h6>
+                    <ul class="space-y-4 text-sm text-gray-400">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-phone text-red-500"></i> +20 123 456 7890</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-envelope text-red-500"></i> Info@redhelmet-fp.com</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h6 class="font-bold mb-6 text-red-500 uppercase text-xs tracking-widest">Newsletter</h6>
+                    <div class="flex bg-white/5 rounded-full p-1 border border-white/10">
+                        <input type="email" placeholder="Email" class="bg-transparent px-4 py-2 w-full text-sm focus:outline-none">
+                        <button class="bg-red-600 px-4 py-2 rounded-full text-xs font-bold uppercase">Join</button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-8 text-center md:text-left">
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">© 2024 Red Helmet Academy. All rights reserved.</p>
+            </div>
+        </div>
     </footer>
 
-    <script type="module" src="./app.js"></script>
-  </body>
+    <!-- Custom Booking Modal (Action UI) -->
+    <div id="bookingConfirmation" class="hidden fixed top-10 left-1/2 -translate-x-1/2 z-[200] bg-green-600 text-white px-8 py-4 rounded-2xl shadow-2xl font-bold flex items-center gap-3 animate-bounce">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>Request Sent! We will contact you shortly.</span>
+    </div>
+
+    <script>
+        // Scroll Reveal
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        window.onload = reveal;
+
+        // Course Modal Logic
+        function openCourse(code, desc) {
+            const modal = document.getElementById('courseModal');
+            document.getElementById('modalCode').innerText = code;
+            document.getElementById('modalTitle').innerText = code === 'NFPA 13' ? 'Fire Sprinkler Design' : (code === 'NFPA 72' ? 'Fire Alarm Systems' : 'Fire Pumps Mastery');
+            document.getElementById('modalDesc').innerText = desc;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('courseModal').style.display = 'none';
+        }
+
+        // Active Booking Button Logic
+        function handleEnroll() {
+            const msg = document.getElementById('bookingConfirmation');
+            msg.classList.remove('hidden');
+            setTimeout(() => {
+                msg.classList.add('hidden');
+                closeModal();
+            }, 3000);
+        }
+
+        // Video Player Logic
+        function playVideo() {
+            const container = document.getElementById('videoContainer');
+            const video = document.getElementById('introVideo');
+            container.classList.remove('hidden');
+            video.play();
+        }
+
+        function closeVideo() {
+            const container = document.getElementById('videoContainer');
+            const video = document.getElementById('introVideo');
+            video.pause();
+            container.classList.add('hidden');
+        }
+
+        // Close modal on click outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('courseModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
 </html>
