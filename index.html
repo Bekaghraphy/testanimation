@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Red Helmet Academy | Online Course Booking</title>
+    <link rel="icon" href="data:," />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <canvas id="ember-canvas" aria-hidden="true"></canvas>
+    <div class="cursor-glow" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <a class="brand" href="/" data-route>
+        <img src="/assets/red-helmet-logo-horizontal.png" alt="Red Helmet Engineering" />
+      </a>
+      <nav class="main-nav" aria-label="Primary navigation">
+        <a href="/#courses">Courses</a>
+        <a href="/#schedule">Schedule</a>
+        <a href="/#payment">Payment</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+      <a class="header-action" href="/#schedule">Book a Seat</a>
+    </header>
+
+    <main id="app"></main>
+
+    <template id="home-template">
+      <section class="hero" id="top">
+        <div class="hero-copy reveal">
+          <span class="eyebrow">Red Helmet Academy</span>
+          <h1>Book certified fire engineering training with confidence.</h1>
+          <p>Instructor-led online and in-person courses for safety professionals, engineers, designers, AHJs, facility managers, and project teams.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#schedule">View Schedule</a>
+            <a class="button secondary" href="#courses">Explore Courses</a>
+          </div>
+          <div class="trust-row" aria-label="Trust highlights">
+            <span>Secure online payment ready</span>
+            <span>NFPA AEN training options</span>
+            <span>Certificates of completion</span>
+          </div>
+        </div>
+        <div class="hero-visual reveal" aria-hidden="true">
+          <div class="scene-card">
+            <div class="halo"></div>
+            <div class="flame-3d">
+              <span class="flame-piece piece-one"></span>
+              <span class="flame-piece piece-two"></span>
+              <span class="flame-piece piece-three"></span>
+              <img src="/assets/red-helmet-flame.png" alt="" />
+            </div>
+            <div class="orbit orbit-one"></div>
+            <div class="orbit orbit-two"></div>
+          </div>
+          <div class="floating-note note-one">
+            <strong>30h</strong>
+            <span>Life Safety Track</span>
+          </div>
+          <div class="floating-note note-two">
+            <strong>Live</strong>
+            <span>Online Classes</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section intro-section" id="about">
+        <div class="section-heading reveal">
+          <span class="eyebrow">Why Red Helmet</span>
+          <h2>Practical training built from real fire protection engineering work.</h2>
+          <p>Red Helmet Engineering training helps teams apply codes and standards effectively, design safer building systems, and gain the confidence to solve real project challenges.</p>
+        </div>
+        <div class="benefit-grid">
+          <article class="benefit-card reveal">
+            <span class="icon" data-icon="expert"></span>
+            <h3>Expert-led sessions</h3>
+            <p>Learn directly from experienced fire protection engineers and approved instructors.</p>
+          </article>
+          <article class="benefit-card reveal">
+            <span class="icon" data-icon="certificate"></span>
+            <h3>Recognized outcomes</h3>
+            <p>Earn Red Helmet certificates or official NFPA completion credentials where applicable.</p>
+          </article>
+          <article class="benefit-card reveal">
+            <span class="icon" data-icon="hybrid"></span>
+            <h3>Flexible delivery</h3>
+            <p>Choose online live training or in-person classroom sessions for team learning.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section courses-section" id="courses">
+        <div class="section-heading reveal">
+          <span class="eyebrow">Courses</span>
+          <h2>Choose your training path.</h2>
+          <p>Clear course cards, durations, delivery modes, and booking actions make browsing fast on desktop and mobile.</p>
+        </div>
+        <div class="course-grid" id="course-grid"></div>
+      </section>
+
+      <section class="section schedule-section" id="schedule">
+        <div class="schedule-header reveal">
+          <div>
+            <span class="eyebrow">Training calendar</span>
+            <h2>Upcoming seats and online batches.</h2>
+          </div>
+          <a class="button primary" href="#courses">Select Course</a>
+        </div>
+        <div class="schedule-table reveal" role="table" aria-label="Upcoming course schedule">
+          <div class="table-row table-head" role="row">
+            <span role="columnheader">Course</span>
+            <span role="columnheader">Date</span>
+            <span role="columnheader">Mode</span>
+            <span role="columnheader">Hours</span>
+            <span role="columnheader">Seat</span>
+          </div>
+          <div id="schedule-list"></div>
+        </div>
+      </section>
+
+      <section class="section payment-section" id="payment">
+        <div class="payment-shell reveal">
+          <div>
+            <span class="eyebrow">Secure checkout</span>
+            <h2>Ready for online payment gateway integration.</h2>
+            <p>The checkout flow keeps trust signals visible: encrypted payment, clear course summary, learner contact details, and a dedicated payment handoff button for PayTabs or any preferred provider.</p>
+          </div>
+          <div class="payment-card" aria-label="Secure payment preview">
+            <div class="card-chip"></div>
+            <span>Red Helmet Academy</span>
+            <strong>Secure Course Booking</strong>
+            <small>Cards · Wallets · Bank gateway</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="section contact-section" id="contact">
+        <div class="contact-panel reveal">
+          <span class="eyebrow">Need a custom cohort?</span>
+          <h2>Train your team online or in person.</h2>
+          <p>Contact Red Helmet Engineering for private schedules, group pricing, and tailored fire protection learning paths.</p>
+          <a class="button primary" href="mailto:Info@redhelmet-fp.com">Contact Academy</a>
+        </div>
+      </section>
+    </template>
+
+    <template id="course-template">
+      <section class="section course-detail">
+        <a class="back-link" href="/" data-route>Back to Courses</a>
+        <div class="detail-layout">
+          <div class="detail-media reveal">
+            <div class="detail-scene" aria-hidden="true">
+              <div class="flame-3d compact">
+                <span class="flame-piece piece-one"></span>
+                <span class="flame-piece piece-two"></span>
+                <span class="flame-piece piece-three"></span>
+                <img src="/assets/red-helmet-flame.png" alt="" />
+              </div>
+            </div>
+            <div class="schedule-mini">
+              <span>Next available batch</span>
+              <strong data-course-date></strong>
+            </div>
+          </div>
+          <aside class="detail-panel reveal">
+            <span class="eyebrow" data-course-level></span>
+            <h1 data-course-title></h1>
+            <p class="instructor" data-course-instructor></p>
+            <p data-course-description></p>
+            <div class="course-meta">
+              <span data-course-hours></span>
+              <span data-course-mode></span>
+              <span>Certificate included</span>
+            </div>
+            <ul class="learn-list" data-course-learn></ul>
+            <div class="price-row">
+              <strong data-course-price></strong>
+              <span>Online payment available</span>
+            </div>
+            <div class="detail-actions">
+              <button class="button primary" data-book>Book Now</button>
+              <button class="button secondary" data-open-preview>Preview Course</button>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </template>
+
+    <template id="checkout-template">
+      <section class="section checkout">
+        <div class="checkout-layout">
+          <div class="checkout-card reveal">
+            <span class="eyebrow">Checkout</span>
+            <h1>Reserve your seat</h1>
+            <form id="checkout-form">
+              <label>Name<input name="name" type="text" autocomplete="name" required placeholder="Full name" /></label>
+              <label>Email<input name="email" type="email" autocomplete="email" required placeholder="you@example.com" /></label>
+              <label>Phone<input name="phone" type="tel" autocomplete="tel" required placeholder="+20 100 919 500" /></label>
+              <button class="button primary full" type="submit">Proceed to Payment</button>
+            </form>
+            <p class="trust-note">Payment gateway placeholder ready for PayTabs integration. Your booking data stays clear before payment handoff.</p>
+          </div>
+          <aside class="order-summary reveal">
+            <span>Course summary</span>
+            <strong data-checkout-title></strong>
+            <em data-checkout-price></em>
+            <p data-checkout-meta></p>
+            <div class="secure-row">
+              <span class="icon" data-icon="lock"></span>
+              <p>Encrypted payment handoff, transparent pricing, and confirmation email after successful payment.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </template>
+
+    <template id="success-template">
+      <section class="section success">
+        <div class="success-card reveal">
+          <img src="/assets/red-helmet-flame.png" alt="" />
+          <span class="eyebrow">Booking confirmed</span>
+          <h1>Payment Successful</h1>
+          <p>Your Red Helmet Academy seat is confirmed. Check your email for access details and schedule instructions.</p>
+          <a class="button primary" href="/" data-route>Start Learning</a>
+        </div>
+      </section>
+    </template>
+
+    <div class="modal" id="preview-modal" aria-hidden="true">
+      <div class="modal-backdrop" data-close-preview></div>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-label="Course preview">
+        <button class="modal-close" data-close-preview aria-label="Close preview">x</button>
+        <div class="modal-visual">
+          <div class="flame-3d compact">
+            <span class="flame-piece piece-one"></span>
+            <span class="flame-piece piece-two"></span>
+            <span class="flame-piece piece-three"></span>
+            <img src="/assets/red-helmet-flame.png" alt="" />
+          </div>
+        </div>
+        <h2>Course Preview</h2>
+        <p>Live instructor-led learning, practical engineering examples, schedule clarity, and secure booking built for professional teams.</p>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div>
+        <img src="/assets/red-helmet-logo-horizontal.png" alt="Red Helmet Engineering" />
+        <p>Professional fire protection training for safer buildings and stronger engineering teams.</p>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:Info@redhelmet-fp.com">Info@redhelmet-fp.com</a>
+        <a href="https://redhelmet-fp.com/" target="_blank" rel="noreferrer">redhelmet-fp.com</a>
+        <span>Egypt: 6th of October City, Giza</span>
+        <span>US: 55 West St, Suite 201, Walpole, MA 02081</span>
+      </div>
+    </footer>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
